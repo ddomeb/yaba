@@ -17,7 +17,10 @@ export class AuthenticationService {
       this.baseUrl + "authentication/login/", {"username": user, "password": password}
     ).pipe(
       tap(response => this.setSession(response)),
-      shareReplay()
+      shareReplay(),
+      tap(() => {
+        this.client.get(this.baseUrl + "accounts/").subscribe( resp => console.log(resp));
+      })
     );
   }
 
