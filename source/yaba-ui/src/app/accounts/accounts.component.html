@@ -1,1 +1,29 @@
-<p *ngFor="let account of accountsPublisher | async">{{account.name}}</p>
+<ngb-accordion [closeOthers]="true">
+  <ngb-panel *ngFor="let acc of (accountsPublisher | async)" id="acc-{{acc.id}}" title="{{acc.name}}">
+    <ng-template ngbPanelContent>
+      <div class="row mb-3">
+        <div class="col-md-4 themed-grid-col">Balance</div>
+        <div class="col-md-8 themed-grid-col">{{acc.balance}} €</div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4 themed-grid-col">Created</div>
+        <div class="col-md-8 themed-grid-col">{{acc.created | date: 'longDate'}} </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col-md-4 themed-grid-col">Description</div>
+        <div class="col-md-8 themed-grid-col">{{acc.description}} </div>
+      </div>
+      <div class="row mb-3">
+        <a class="btn btn-outline-primary" (click)="startEditing(acc.id)">Edit</a>
+        <a class="btn btn-outline-primary" (click)="deleteAccount(acc.id)">Delete</a>
+        <a class="btn btn-outline-primary" href="#">Transfer from</a>
+        <a class="btn btn-outline-primary" href="#">Transfer to</a>
+        <a class="btn btn-outline-primary" href="#">Transactions</a>
+        <a class="btn btn-outline-primary" href="#">Reports</a>
+      </div>
+    </ng-template>
+  </ngb-panel>
+</ngb-accordion>
+<a class="btn btn-outline-primary" (click)="newAccount()">Add new</a>
+<div class="row mb-3">
+</div>

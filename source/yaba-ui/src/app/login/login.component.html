@@ -1,18 +1,21 @@
-<form [formGroup]="form">
-  <fieldset>
-    <legend>Login</legend>
-    <div class="form-field">
-      <label>Email:</label>
-      <input name="email" formControlName="email">
-    </div>
-    <div class="form-field">
-      <label>Password:</label>
-      <input name="password" formControlName="password"
-             type="password">
-    </div>
-  </fieldset>
-  <div class="form-buttons">
-    <button class="button button-primary"
-            (click)="login()">Login</button>
-  </div>
-</form>
+<body class="text-center">
+  <main class="form-signin">
+    <form [formGroup]="form">
+      <fieldset>
+        <h1 class="h3 mb-3 fw-normal">Please Sign in</h1>
+        <div class="form-field">
+          <label for="username" class="visually-hidden">Username</label>
+          <input name="username" id="username" formControlName="username" class="form-control" placeholder="UserName" autofocus="">
+        </div>
+        <div class="form-field">
+          <label for="password" class="visually-hidden">Email address</label>
+          <input name="password" id="password" formControlName="password" class="form-control" type="password" placeholder="Password">
+        </div>
+      </fieldset>
+      <div class="form-buttons">
+        <button class="w-100 btn btn-lg btn-primary"
+                (click)="login()">Login</button>
+      </div>
+    </form>
+  </main>
+</body>
