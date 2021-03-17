@@ -1,0 +1,46 @@
+
+<div class="modal-header">
+  <h4 class="modal-title">Edit form</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body container">
+  <div>
+    <form (ngSubmit)="onSubmit()" #accountForm="ngForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name"
+               required
+               [(ngModel)]="account.name" name="name"
+               #name="ngModel">
+        <div [hidden]="name.valid || name.pristine"
+             class="alert alert-danger">
+          Name is required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="balance">Balance</label>
+        <input type="number" class="form-control" id="balance"
+               [(ngModel)]="account.balance" name="balance">
+      </div>
+
+      <div class="form-group">
+        <label for="type">Account type</label>
+        <select class="form-control" id="type"
+                required
+                [(ngModel)]="account.type" name="type"
+                #type="ngModel">
+          <option *ngFor="let t of ACCOUNT_TYPES" [value]="t">{{t}}</option>
+        </select>
+        <div [hidden]="type.valid || type.pristine" class="alert alert-danger">
+          Type is required
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-success" [disabled]="!accountForm.form.valid">Submit</button>
+      </div>
+    </form>
+  </div>
+</div>
