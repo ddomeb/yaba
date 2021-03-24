@@ -22,7 +22,6 @@ class AccountView(viewsets.ViewSet):
 
     @classmethod
     def create(cls, request: Request) -> Response:
-        # TODO unique owner-name-type
         data = JSONParser().parse(request)
         serializer = AccountSerializer(data=data)
         if serializer.is_valid():
@@ -41,7 +40,6 @@ class AccountView(viewsets.ViewSet):
     @classmethod
     def update(cls, request: Request, pk=None) -> Response:
         # TODO can not modify created date, owner(?)
-        # TODO check uniqueness
         # TODO in case of modified balance should add balancing transaction
         queryset = request.user.accounts.all()
         account = get_object_or_404(queryset, pk=pk)
