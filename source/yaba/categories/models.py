@@ -3,28 +3,37 @@ from django.contrib.auth.models import User
 
 
 class MainCategory(models.Model):
-    name = models.CharField
+    class Meta:
+        verbose_name_plural = "Main categories"
+
+    name = models.CharField(max_length=250)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='accounts',
+        related_name='main_categories',
         db_index=True,
-        editable=False
     )
+
+    def __str__(self):
+        return f"{self.owner.username} - {self.name}"
 
 
 class SubCategory(models.Model):
-    name = models.CharField
+    class Meta:
+        verbose_name_plural = "Subcategories"
+
+    name = models.CharField(max_length=250)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='accounts',
+        related_name='subcategories',
         db_index=True,
-        editable=False
     )
     main_category = models.ForeignKey(
         MainCategory,
         on_delete=models.CASCADE,
         related_name="subcategories",
-        editable=False
     )
+
+    def __str__(self):
+        return f"{self.owner.username} - {self.name}"

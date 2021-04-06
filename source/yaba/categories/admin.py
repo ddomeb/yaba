@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from categories.models import MainCategory, SubCategory
+
+admin.site.register(MainCategory)
+admin.site.register(SubCategory)
