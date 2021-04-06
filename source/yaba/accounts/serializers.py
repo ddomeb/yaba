@@ -1,8 +1,20 @@
 from rest_framework import serializers
-from .models import Account
+
+from accounts.models import Account
 
 
 class AccountSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Account
-        exclude = ('owner',)
+        depth = 1
+        fields = (
+            'name',
+            'description',
+            'balance',
+            'created',
+            'type',
+            'isEnabled',
+            'id',
+        )
+        read_only_fields = ('created', 'id', )

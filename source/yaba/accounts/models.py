@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 
 
 class Account(models.Model):
-    # TODO: add icon field and user settings (JSONField)
     ACCOUNT_TYPE_CHOICES = (
         ('account', 'Account'),
         ('savings', 'Savings')
@@ -20,7 +19,6 @@ class Account(models.Model):
         on_delete=models.CASCADE,
         related_name='accounts',
         db_index=True,
-        editable=False
     )
 
     def __str__(self):
