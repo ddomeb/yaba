@@ -16,9 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-urlpatterns = [
+urlpatterns = []
+
+urlpatterns += [
     path('admin/', admin.site.urls),
-    path('', include('accounts.urls'))
+]
+
+urlpatterns += [
+    path('', include('categories.urls')),
+    path('', include('accounts.urls')),
+    path('', include('transactions.urls')),
 ]
 
 urlpatterns += [
@@ -26,4 +33,3 @@ urlpatterns += [
     path('authentication/', include('dj_rest_auth.urls')),
     path('registration/', include('dj_rest_auth.registration.urls'))
 ]
-
