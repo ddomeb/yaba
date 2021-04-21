@@ -3,11 +3,9 @@
     <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
     <nav class="my-2 my-md-0 me-md-3">
       <a class="p-2 text-dark" href="#">What's Yaba?</a>
-      <ng-container *ngIf="!(isLoggedInPublisher | async)">
-        <a class="p-2 text-dark" routerLink="login">Accounts</a>
-      </ng-container>
       <ng-container *ngIf="isLoggedInPublisher | async">
         <a class="p-2 text-dark" routerLink="accounts">Accounts</a>
+        <a class="p-2 text-dark" routerLink="transactions">Transactions</a>
       </ng-container>
     </nav>
     <ng-container *ngIf="!(isLoggedInPublisher | async)">

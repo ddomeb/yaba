@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, finalize, shareReplay, switchMap, tap} from 'rxjs/operators';
-import jwtDecode from 'jwt-decode';
+// import jwtDecode, { JwtPayload } from 'jwt-decode';
 import {SessionInfo, refreshTokenTokenIsExpired} from '../common_models/sessioninfo.interface';
 
 interface TokenInfo {
@@ -42,36 +42,45 @@ const VERIFY_URL = 'authentication/token/verify/';
 })
 export class AuthenticationService {
   private baseUrl = 'http://127.0.0.1:8000/';
-  private isLoggedIn = false;
-  public loggedInPublisher: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  // @ts-ignore
+  private isLoggedIn: boolean;
+  // @ts-ignore
+  public loggedInPublisher: BehaviorSubject<boolean>;
 
   constructor(private client: HttpClient) {
-    console.log('@@@@ auth service constr');
+    console.log('auth service constructor');
     const session: SessionInfo | null = this.getSessionInfo();
-    if (session == null) {
+    if (session === null) {
       this.isLoggedIn = false;
-      this.loggedInPublisher.next(this.isLoggedIn);
+      this.loggedInPublisher = new BehaviorSubject<boolean>(this.isLoggedIn);
     }
     else {
       if (refreshTokenTokenIsExpired(session)) {
+        console.log('refresh token expired, clearing session');
         AuthenticationService.clearSession();
         this.isLoggedIn = false;
-        this.loggedInPublisher.next(this.isLoggedIn);
+        this.loggedInPublisher = new BehaviorSubject<boolean>(this.isLoggedIn);
       }
       else {
+        this.isLoggedIn = true;
+        this.loggedInPublisher = new BehaviorSubject<boolean>(this.isLoggedIn);
         this.refreshAccessToken().pipe(
           tap(() => {
+            console.log('auth service refreshing access token.');
             this.isLoggedIn = true;
             this.loggedInPublisher.next(this.isLoggedIn);
           }),
           catchError(() => {
+            console.log('auth service refresh failed');
             this.isLoggedIn = false;
+            this.loggedInPublisher = new BehaviorSubject<boolean>(this.isLoggedIn);
             return of(false);
-          })
+          }),
         ).subscribe();
       }
     }
   }
+
 
   // private static getExpiration(): { access_token_exp: number, refresh_token_exp: number } {
   //   const session: SessionInfo = JSON.parse(localStorage.getItem(SESSION_INFO_KEY) || '');
@@ -86,8 +95,10 @@ export class AuthenticationService {
   }
 
   private static setSession(authResult: AuthenticationResponse): void {
-    const decodedAccessToken: TokenInfo = jwtDecode(authResult.access_token);
-    const decodedRefreshToken: TokenInfo = jwtDecode(authResult.access_token);
+    const decodedAccessToken: TokenInfo = this.decodeToken(authResult.access_token);
+    console.log('access', decodedAccessToken);
+    const decodedRefreshToken: TokenInfo = this.decodeToken(authResult.refresh_token);
+    console.log('refresh', decodedRefreshToken);
 
     const session: SessionInfo = {
       user: {...authResult.user},
@@ -103,6 +114,11 @@ export class AuthenticationService {
     localStorage.setItem(SESSION_INFO_KEY, JSON.stringify(session));
   }
 
+  // TODO: make jwt-decode work
+  private static decodeToken(token: string): any{
+    return JSON.parse(atob(token.split('.')[1]));
+  }
+
   public getSessionInfo(): SessionInfo | null {
     const sessionData: string | null = localStorage.getItem(SESSION_INFO_KEY);
     return sessionData ? JSON.parse(sessionData) : null;
@@ -110,13 +126,13 @@ export class AuthenticationService {
 
   public refreshAccessToken(): Observable<SessionInfo> {
     let session: SessionInfo | null = this.getSessionInfo();
-    if (session == null) {
+    if (session === null) {
       throw new Error('no session to refresh');
     }
     else {
       return this.client.post<RefreshResponse>(this.baseUrl + REFRESH_URL, {refresh: session.refresh_token.token}).pipe(
         switchMap((response: RefreshResponse) => {
-          const accessTokenInfo: TokenInfo = jwtDecode(response.access);
+          const accessTokenInfo: TokenInfo = AuthenticationService.decodeToken(response.access);
           session = session as SessionInfo;
           session.access_token.token = response.access;
           session.access_token.expiry = accessTokenInfo.exp;

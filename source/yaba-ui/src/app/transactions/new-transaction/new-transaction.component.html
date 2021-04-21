@@ -1,0 +1,40 @@
+<div class="modal-header">
+  <h4 class="modal-title">Add new transaction</h4>
+</div>
+<div class="modal-body container">
+  <form class="form-group" [formGroup]="form">
+    <div class="input-group">
+      <select class="form-select" formControlName="accountId" >
+        <option value=""></option>
+        <option *ngFor="let acc of (accounts | async)" value="{{acc.id}}">{{acc.name}}</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select class="form-select" formControlName="mainCategoryId" >
+        <option value=""></option>
+        <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <select class="form-select" formControlName="subCategoryId" >
+        <option value=""></option>
+        <ng-container *ngIf="!(showDisabledSubCatSelect | async)">
+          <option *ngFor="let cat of (mainCategoryDetails | async)!.subcategories" value="{{cat.id}}">{{cat.name}}</option>
+        </ng-container>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="notetextarea">Note</label>
+      <textarea formControlName="note" class="form-control" id="notetextarea" rows="3"></textarea>
+    </div>
+    <div class="form-group row">
+      <label for="amount" class="col-2 col-form-label">Amount</label>
+      <div class="col-10">
+        <input formControlName="amount" class="form-control" type="number" min="0" value="0" id="amount">
+      </div>
+    </div>
+  </form>
+  <div class="container">
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
+  </div>
+</div>

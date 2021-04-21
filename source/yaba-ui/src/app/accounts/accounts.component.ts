@@ -1,10 +1,15 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ApiService } from '../services/apiservice.service';
-import { BehaviorSubject } from 'rxjs';
-import {AccountInfo} from '../common_models/account.interface';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {BehaviorSubject, of} from 'rxjs';
+import {map, switchMap, tap} from 'rxjs/operators';
+
+import {AccountInfo} from '../common_models/account.interface';
 import {AccountDetailsComponent} from './account-details/account-details.component';
-import {switchMap, tap} from 'rxjs/operators';
+import {AccountsService} from './accounts.service';
+import {TransactionListComponent} from './transaction-list/transaction-list.component';
+import {AccountBalanceHistoryComponent} from './account-balance-history/account-balance-history.component';
+import {AccountHistory} from '../common_models/account-history.interface';
+import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';
 
 
 const newAccount: AccountInfo =  {
@@ -24,61 +29,59 @@ const newAccount: AccountInfo =  {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountsComponent implements OnInit {
-  private static readonly ACCOUNT_ENDPOINT = 'accounts/';
-  public accounts: Array<AccountInfo> = [];
   public accountsPublisher: BehaviorSubject<Array<AccountInfo>> = new BehaviorSubject<Array<AccountInfo>>([]);
 
-  constructor(private readonly apiService: ApiService, private modalService: NgbModal) {}
+  constructor(
+    private readonly accountsService: AccountsService,
+    private modalService: NgbModal
+  ) {}
 
   ngOnInit(): void {
-      this.loadAccounts();
+    this.accountsService.loadAccounts();
+    this.accountsPublisher = this.accountsService.accountsPublisher;
   }
 
-  private loadAccounts(): void {
-    this.apiService.getWithType<Array<AccountInfo>>(AccountsComponent.ACCOUNT_ENDPOINT).subscribe(
-      (response: Array<AccountInfo>) => {
-        this.accounts = response;
-        this.accountsPublisher.next(this.accounts);
-      }
-    );
-  }
-
-  startEditing(id: number): void {
-    const account: AccountInfo | undefined = this.accounts.find(acc => acc.id === id);
+  public startEditing(id: number): void {
+    const account: AccountInfo | undefined = this.accountsService.getAccountById(id);
     if (!account) {
-      console.log('something went wrong');
       return;
     }
     const modalRef = this.modalService.open(AccountDetailsComponent);
     modalRef.componentInstance.account = JSON.parse(JSON.stringify(account));
     modalRef.closed.pipe(
-      switchMap( (result: AccountInfo) => this.apiService.put(
-        AccountsComponent.ACCOUNT_ENDPOINT +  result.id.toString() + '/', result)
-      ),
-      tap(() => this.loadAccounts())
-    ).subscribe();
-    modalRef.dismissed.pipe(
-      tap( res => console.log(res))
+      switchMap(  (result: AccountInfo) => this.accountsService.modifyAccount(result))
     ).subscribe();
   }
 
-  newAccount(): void {
+  public newAccount(): void {
     const modalRef = this.modalService.open(AccountDetailsComponent);
     modalRef.componentInstance.account = JSON.parse(JSON.stringify(newAccount));
     modalRef.closed.pipe(
-      switchMap( (result: AccountInfo) => this.apiService.post(
-        AccountsComponent.ACCOUNT_ENDPOINT, result)
-      ),
-      tap(() => this.loadAccounts())
-    ).subscribe();
-    modalRef.dismissed.pipe(
-      tap( res => console.log(res))
+      switchMap( (result: AccountInfo) => this.accountsService.addAccount(result)),
     ).subscribe();
   }
 
-  deleteAccount(id: number): void {
-    this.apiService.delete(AccountsComponent.ACCOUNT_ENDPOINT + id.toString() + '/').pipe(
-      tap(() => this.loadAccounts())
+  public deleteAccount(id: number): void {
+    const modalRef = this.modalService.open(SimpleConfirmModalComponent);
+    modalRef.componentInstance.message = 'Are you sure you want to delete this account?';
+    modalRef.dismissed.pipe(
+      switchMap((result: string) => result === 'ok' ? this.accountsService.deleteAccount(id) : of(result))
+    ).subscribe();
+  }
+
+  public showTransactions(account: AccountInfo): void {
+    const modalRef = this.modalService.open(TransactionListComponent, {size: 'lg'});
+    modalRef.componentInstance.account = account;
+  }
+
+  public showAccountHistory(id: number): void {
+    this.accountsService.getAccountBalanceHistory(id, 'hour').pipe(
+      tap((response: AccountHistory) => {
+        const modalRef = this.modalService.open(AccountBalanceHistoryComponent, {size: 'xl'});
+        modalRef.componentInstance.accountId = id;
+        modalRef.componentInstance.data =  new BehaviorSubject<Array<AccountHistory>>([response, ]);
+        modalRef.componentInstance.dataPublisher.next(true);
+      }),
     ).subscribe();
   }
 }

@@ -1,0 +1,9 @@
+<div class="modal-header">
+  <h4 class="modal-title">Edit form</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body container">
+  <app-account-balance-graph *ngIf="dataPublisher | async" [data]="(data| async)!"></app-account-balance-graph>
+</div>

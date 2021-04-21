@@ -10,7 +10,7 @@ import {AuthenticationService} from './services/authentication.service';
 })
 export class AppComponent{
   title = 'Yaba';
-  public isLoggedInPublisher: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isLoggedInPublisher: BehaviorSubject<boolean>;
 
   constructor(private authenticationService: AuthenticationService) {
     this.isLoggedInPublisher = this.authenticationService.loggedInPublisher;

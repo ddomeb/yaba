@@ -4,6 +4,7 @@ import {AccountsComponent} from './accounts/accounts.component';
 import {LoginComponent} from './login/login.component';
 import {CategoriesComponent} from './categories/categories.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {TransactionsComponent} from './transactions/transactions.component';
 
 const routes: Routes = [
 
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'accounts', component: AccountsComponent},
   { path: 'categories', component: CategoriesComponent},
   { path: 'dashboard', component: DashboardComponent},
+  { path: 'transactions', component: TransactionsComponent},
   // { path: '**', component:  PageNotFoundComponent}
 ];
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,43 +10,23 @@ export class ApiService {
 
   constructor(private client: HttpClient){}
 
-  public getWithType<T>(endpoint: string): Observable<T>{
+  public get<T = any>(endpoint: string, headers?: HttpHeaders, params?: HttpParams): Observable<T>{
     const fullUrl: string = this.baseUrl + endpoint;
-    return this.client.get<T>(fullUrl);
+    return this.client.get<T>(fullUrl, {headers, params});
   }
 
-  public get(endpoint: string): Observable<any>{
-    const fullUrl: string = this.baseUrl + endpoint;
-    return this.client.get(fullUrl);
-  }
-
-  public postWithType<T>(endpoint: string, body: any): Observable<T> {
+  public post<T = any>(endpoint: string, body: any): Observable<T> {
     const fullUrl: string = this.baseUrl + endpoint;
     return this.client.post<T>(fullUrl, body);
   }
 
-  public post(endpoint: string, body: any): Observable<any> {
-    const fullUrl: string = this.baseUrl + endpoint;
-    return this.client.post(fullUrl, body);
-  }
-
-  public putWithType<T>(endpoint: string, body: any): Observable<T> {
+  public put<T = any>(endpoint: string, body: any): Observable<T> {
     const fullUrl: string = this.baseUrl + endpoint;
     return this.client.put<T>(fullUrl, body);
   }
 
-  public put(endpoint: string, body: any): Observable<any> {
-    const fullUrl: string = this.baseUrl + endpoint;
-    return this.client.put(fullUrl, body);
-  }
-
-  public deleteWithType<T = any>(endpoint: string): Observable<T>{
+  public delete<T = any>(endpoint: string): Observable<T>{
     const fullUrl: string = this.baseUrl + endpoint;
     return this.client.delete<T>(fullUrl);
-  }
-
-  public delete(endpoint: string): Observable<any>{
-    const fullUrl: string = this.baseUrl + endpoint;
-    return this.client.delete(fullUrl);
   }
 }

@@ -1,3 +1,4 @@
+<script src="account-details/account-details.component.ts"></script>
 <ngb-accordion [closeOthers]="true">
   <ngb-panel *ngFor="let acc of (accountsPublisher | async)" id="acc-{{acc.id}}" title="{{acc.name}}">
     <ng-template ngbPanelContent>
@@ -16,10 +17,8 @@
       <div class="row mb-3">
         <a class="btn btn-outline-primary" (click)="startEditing(acc.id)">Edit</a>
         <a class="btn btn-outline-primary" (click)="deleteAccount(acc.id)">Delete</a>
-        <a class="btn btn-outline-primary" href="#">Transfer from</a>
-        <a class="btn btn-outline-primary" href="#">Transfer to</a>
-        <a class="btn btn-outline-primary" href="#">Transactions</a>
-        <a class="btn btn-outline-primary" href="#">Reports</a>
+        <a class="btn btn-outline-primary" (click)="showTransactions(acc)">Transactions</a>
+        <a class="btn btn-outline-primary" (click)="showAccountHistory(acc.id)">History</a>
       </div>
     </ng-template>
   </ngb-panel>

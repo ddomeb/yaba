@@ -3,8 +3,8 @@ export interface AccountInfo {
   name: string;
   description: string;
   balance: number;
-  created: Date;
+  readonly created: Date;
   type: 'account' | 'savings';
   isEnabled: boolean;
-  id: number;
+  readonly id: number;
 }

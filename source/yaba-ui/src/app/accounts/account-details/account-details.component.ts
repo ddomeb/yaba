@@ -1,6 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {AccountInfo} from '../../common_models/account.interface';
+import {Component, Input} from '@angular/core';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+
+import {AccountInfo} from '../../common_models/account.interface';
 
 @Component({
   selector: 'app-account-details',
