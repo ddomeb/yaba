@@ -17,7 +17,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ('name', 'id', )
+        fields = ('name', 'id', 'main_category', )
         read_only_fields = ('id', 'main_category', )
 
     def to_representation(self, instance):

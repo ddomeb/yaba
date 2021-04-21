@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+django = "3.1"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
@@ -12,6 +12,7 @@ django-cors-headers = "*"
 dj-rest-auth = "*"
 djangorestframework-simplejwt = "*"
 django-allauth = "*"
+python-dateutil = "*"
 
 [dev-packages]
 

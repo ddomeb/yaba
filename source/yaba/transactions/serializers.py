@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from rest_framework.relations import PrimaryKeyRelatedField
 
+from accounts.models import Account
 from accounts.serializers import AccountSerializer
-from categories.models import SubCategory, MainCategory
+from categories.models import SubCategory
 from categories.serializers import SubCategorySerializer
 from transactions.models import Transaction
 
@@ -31,7 +32,7 @@ class TransactionDetailsSerializer(serializers.ModelSerializer):
 
 class TransactionSerializer(serializers.ModelSerializer):
     subcategory = PrimaryKeyRelatedField(queryset=SubCategory.objects.all())
-    account = PrimaryKeyRelatedField(queryset=MainCategory.objects.all())
+    account = PrimaryKeyRelatedField(queryset=Account.objects.all())
 
     class Meta:
         model = Transaction

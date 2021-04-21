@@ -6,6 +6,10 @@ from categories.models import SubCategory
 
 
 class Transaction(models.Model):
+
+    class Meta:
+        ordering = ('-created', )
+
     note = models.TextField(blank=True)
     amount = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True, editable=False)

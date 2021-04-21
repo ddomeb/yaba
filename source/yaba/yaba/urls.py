@@ -26,6 +26,7 @@ urlpatterns += [
     path('', include('categories.urls')),
     path('', include('accounts.urls')),
     path('', include('transactions.urls')),
+    path('', include('dashboard.urls')),
 ]
 
 urlpatterns += [
