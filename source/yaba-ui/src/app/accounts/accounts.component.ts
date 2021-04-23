@@ -33,7 +33,7 @@ export class AccountsComponent implements OnInit {
 
   constructor(
     private readonly accountsService: AccountsService,
-    private modalService: NgbModal
+    private readonly modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +75,7 @@ export class AccountsComponent implements OnInit {
   }
 
   public showAccountHistory(id: number): void {
-    this.accountsService.getAccountBalanceHistory(id, 'hour').pipe(
+    this.accountsService.getAccountBalanceHistory(id, 'week').pipe(
       tap((response: AccountHistory) => {
         const modalRef = this.modalService.open(AccountBalanceHistoryComponent, {size: 'xl'});
         modalRef.componentInstance.accountId = id;

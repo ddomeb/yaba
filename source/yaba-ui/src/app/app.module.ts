@@ -24,6 +24,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { TransactionFilterComponent } from './transactions/transaction-filter/transaction-filter.component';
 import { NewTransactionComponent } from './transactions/new-transaction/new-transaction.component';
 import { SimpleConfirmModalComponent } from './common_components/simple-confirm-modal/simple-confirm-modal.component';
+import { CategoryDetailsComponent } from './categories/category-details/category-details.component';
+import { NewCategoryComponent } from './categories/new-category/new-category.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,8 @@ import { SimpleConfirmModalComponent } from './common_components/simple-confirm-
     TransactionFilterComponent,
     NewTransactionComponent,
     SimpleConfirmModalComponent,
+    CategoryDetailsComponent,
+    NewCategoryComponent,
   ],
   imports: [
       BrowserModule,
