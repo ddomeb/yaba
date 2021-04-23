@@ -29,7 +29,7 @@ def get_start_date(end_date: datetime.datetime, timeline: str) -> typing.Optiona
 
 
 def group_transactions_by_timeline(base_query: QuerySet, timeline: str) -> QuerySet:
-    trunc_keyword = 'month'
+    trunc_keyword = 'hour'
     if timeline == 'week':
         trunc_keyword = 'hour'
     elif timeline == 'month':
@@ -37,7 +37,7 @@ def group_transactions_by_timeline(base_query: QuerySet, timeline: str) -> Query
     elif timeline == 'year':
         trunc_keyword = 'week'
     return base_query \
-        .annotate(name=Trunc('created', 'hour', output_field=DateTimeField())) \
+        .annotate(name=Trunc('created', 'minute', output_field=DateTimeField())) \
         .order_by('-name') \
         .values('name') \
         .annotate(value=Sum('amount'))
@@ -77,9 +77,7 @@ def generate_account_balance_history(account_pk: int, request: Request) -> Accou
 
 
 def get_timeline_param(request: Request) -> str:
-    timeline = request.GET.get('timedelta', 'month')
-    # TODO: add 'all' kw
-    return 'month' if timeline not in ['week', 'month', 'year', ] else timeline
+    return request.GET.get('timedelta', 'month')
 
 
 @api_view()
@@ -90,7 +88,6 @@ def get_single_account_history(request: Request, account_pk: int):
             status=status.HTTP_404_NOT_FOUND
         )
 
-    # transaction_history = generate_transaction_history_queryset(timeline, account_pk, request)
     account_balance_history = generate_account_balance_history(account_pk, request)
     serializer = AccountHistorySerializer(account_balance_history)
     return Response(
