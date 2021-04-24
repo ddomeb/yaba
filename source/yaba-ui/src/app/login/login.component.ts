@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../services/authentication.service';
@@ -7,13 +7,16 @@ import {AuthenticationService} from '../services/authentication.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder,
-              private authService: AuthenticationService,
-              private router: Router) {
+  constructor(
+    private readonly formBuilder: FormBuilder,
+    private readonly authService: AuthenticationService,
+    private readonly router: Router
+  ) {
 
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
@@ -27,6 +30,12 @@ export class LoginComponent {
       this.authService.login(formData.username, formData.password).subscribe(
           () => this.router.navigateByUrl('/')
         );
+    }
+  }
+
+  ngOnInit(): void {
+    if (this.authService.loggedInPublisher.value) {
+      this.router.navigateByUrl('dashboard');
     }
   }
 }

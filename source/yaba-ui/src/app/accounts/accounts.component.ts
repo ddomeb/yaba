@@ -64,7 +64,7 @@ export class AccountsComponent implements OnInit {
   public deleteAccount(id: number): void {
     const modalRef = this.modalService.open(SimpleConfirmModalComponent);
     modalRef.componentInstance.message = 'Are you sure you want to delete this account?';
-    modalRef.dismissed.pipe(
+    modalRef.closed.pipe(
       switchMap((result: string) => result === 'ok' ? this.accountsService.deleteAccount(id) : of(result))
     ).subscribe();
   }

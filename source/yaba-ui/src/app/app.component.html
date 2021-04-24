@@ -6,18 +6,19 @@
       <ng-container *ngIf="isLoggedInPublisher | async">
         <a class="p-2 text-dark" routerLink="accounts">Accounts</a>
         <a class="p-2 text-dark" routerLink="transactions">Transactions</a>
+        <a class="p-2 text-dark" routerLink="categories">Categories</a>
       </ng-container>
     </nav>
     <ng-container *ngIf="!(isLoggedInPublisher | async)">
       <a class="btn btn-outline-primary" routerLink="login">Log in</a>
-      <a class="btn btn-outline-primary" href="#">Register</a>
+      <a class="btn btn-outline-primary" routerLink="register">Register</a>
     </ng-container>
     <ng-container *ngIf="isLoggedInPublisher | async">
-      <a class="btn btn-outline-primary" href="#">Profile</a>
-      <a class="btn btn-outline-primary" href="#" (click)="logout()">Logout</a>
+      <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
     </ng-container>
     </header>
   <div>
+    <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
     <router-outlet></router-outlet>
   </div>
 </ng-container>

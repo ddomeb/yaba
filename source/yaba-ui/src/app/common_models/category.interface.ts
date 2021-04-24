@@ -1,6 +1,7 @@
 
 export interface MainCategory {
   name: string;
+  description: string;
   readonly id: number;
 }
 
@@ -12,6 +13,7 @@ export interface SubCategoryDetails {
 
 export interface SubCategory {
   name: string;
+  description: string;
   readonly id: number;
 }
 

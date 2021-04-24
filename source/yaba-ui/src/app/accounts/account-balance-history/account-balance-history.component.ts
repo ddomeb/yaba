@@ -10,7 +10,7 @@ import {BehaviorSubject} from 'rxjs';
   selector: 'app-account-balance-history',
   templateUrl: './account-balance-history.component.html',
   styleUrls: ['./account-balance-history.component.scss'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountBalanceHistoryComponent implements OnChanges {
   // @ts-ignore

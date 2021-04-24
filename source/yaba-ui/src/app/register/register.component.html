@@ -1,1 +1,31 @@
-<p>register works!</p>
+<div class="content">
+  <form class="form-group" [formGroup]="form">
+    <div class="form-group row">
+      <label for="user" class="col-2 col-form-label">Username</label>
+      <div class="col-10">
+        <input formControlName="username" class="form-control" type="text"  id="user">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="email" class="col-2 col-form-label">E-mail</label>
+      <div class="col-10">
+        <input formControlName="email" class="form-control" type="email"  id="email">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pass1" class="col-2 col-form-label">Password</label>
+      <div class="col-10">
+        <input formControlName="password1" class="form-control" type="password" id="pass1">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="pass2" class="col-2 col-form-label">Confirm password</label>
+      <div class="col-10">
+        <input formControlName="password2" class="form-control" type="password" id="pass2">
+      </div>
+    </div>
+  </form>
+  <div class="container">
+    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
+  </div>
+</div>

@@ -26,6 +26,7 @@ import { NewTransactionComponent } from './transactions/new-transaction/new-tran
 import { SimpleConfirmModalComponent } from './common_components/simple-confirm-modal/simple-confirm-modal.component';
 import { CategoryDetailsComponent } from './categories/category-details/category-details.component';
 import { NewCategoryComponent } from './categories/new-category/new-category.component';
+import { ToastContainerComponent } from './common_components/toast-container/toast-container.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { NewCategoryComponent } from './categories/new-category/new-category.com
     SimpleConfirmModalComponent,
     CategoryDetailsComponent,
     NewCategoryComponent,
+    ToastContainerComponent,
   ],
   imports: [
       BrowserModule,

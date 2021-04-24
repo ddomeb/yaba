@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import {TransactionService} from '../transaction.service.';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {BehaviorSubject} from 'rxjs';
@@ -11,7 +11,8 @@ import {TransactionInfo} from '../../common_models/transaction.interface';
 @Component({
   selector: 'app-new-transaction',
   templateUrl: './new-transaction.component.html',
-  styleUrls: ['./new-transaction.component.scss']
+  styleUrls: ['./new-transaction.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTransactionComponent implements OnInit {
   public mainCategories: BehaviorSubject<MainCategory[]>;

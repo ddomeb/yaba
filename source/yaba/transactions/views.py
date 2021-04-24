@@ -130,6 +130,6 @@ class TransactionView(viewsets.ViewSet):
     def destroy(cls, request: Request, pk=None) -> Response:
         queryset = request.user.transactions.all()
         transaction = get_object_or_404(queryset, pk=pk)
-        transaction.delete()
         revert_transaction(transaction.amount, transaction.account)
+        transaction.delete()
         return Response(data=dict(), status=status.HTTP_200_OK)

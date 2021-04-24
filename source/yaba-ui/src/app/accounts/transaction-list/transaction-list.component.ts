@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {tap} from 'rxjs/operators';
@@ -10,7 +10,8 @@ import {AccountInfo} from '../../common_models/account.interface';
 @Component({
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
-  styleUrls: ['./transaction-list.component.scss']
+  styleUrls: ['./transaction-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionListComponent implements OnInit {
   // @ts-ignore

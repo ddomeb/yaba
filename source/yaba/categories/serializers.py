@@ -8,7 +8,7 @@ class MainCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainCategory
-        fields = ('name', 'id', )
+        fields = ('name', 'id', 'description')
         read_only_fields = ('id', )
 
 
@@ -17,7 +17,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ('name', 'id', 'main_category', )
+        fields = ('name', 'id', 'main_category', 'description')
         read_only_fields = ('id', 'main_category', )
 
     def to_representation(self, instance):
@@ -28,7 +28,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 class SubCategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = SubCategory
-        fields = ('name', 'id', )
+        fields = ('name', 'id', 'description')
         read_only_fields = ('id', )
 
 
@@ -37,7 +37,7 @@ class MainCategoryDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainCategory
-        fields = ('name', 'subcategories', 'id', )
+        fields = ('name', 'subcategories', 'id', 'description')
         read_only_fields = ('id', 'subcategories', )
 
 
@@ -46,5 +46,5 @@ class SubCategoryDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubCategory
-        fields = ('name', 'main_category', 'id', )
+        fields = ('name', 'main_category', 'id', 'description')
         read_only_fields = ('id', 'main_category', )

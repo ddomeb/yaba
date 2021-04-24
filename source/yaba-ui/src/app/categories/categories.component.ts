@@ -1,5 +1,5 @@
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CategoriesService} from './categories.service';
 import {BehaviorSubject, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -7,11 +7,13 @@ import {switchMap} from 'rxjs/operators';
 import {MainCategory, MainCategoryDetails} from '../common_models/category.interface';
 import {NewCategoryComponent} from './new-category/new-category.component';
 import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';
+import {CategoryDetailsComponent} from './category-details/category-details.component';
 
 @Component({
   selector: 'app-categories',
   templateUrl: './categories.component.html',
-  styleUrls: ['./categories.component.scss']
+  styleUrls: ['./categories.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoriesComponent implements OnInit {
   public mainCategories: BehaviorSubject<Array<MainCategory>>;
@@ -23,6 +25,7 @@ export class CategoriesComponent implements OnInit {
   ) {
     this.mainCategories = this.categoriesService.mainCategoriesPublisher;
     this.currentMainCategoryDetails = this.categoriesService.currentMainCategoryPublisher;
+    this.categoriesService.loadMainCategories().subscribe();
   }
 
   ngOnInit(): void {
@@ -30,9 +33,6 @@ export class CategoriesComponent implements OnInit {
 
   public addNewCategory(): void {
     const modalRef = this.modalService.open(NewCategoryComponent);
-    modalRef.closed.pipe(
-      switchMap((result: MainCategory) => this.categoriesService.addMainCategory((result)))
-    ).subscribe();
   }
 
   public deleteMainCategory(id: number): void {
@@ -43,4 +43,9 @@ export class CategoriesComponent implements OnInit {
     ).subscribe();
   }
 
+  showCategoryDetails(category: MainCategory): void {
+    const modalRef = this.modalService.open(CategoryDetailsComponent, {size: 'lg'});
+    modalRef.componentInstance.categoryId = category.id;
+    // modalRef.componentInstance
+  }
 }

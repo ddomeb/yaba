@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {TransactionService} from './transaction.service.';
 import {PaginatedTransactionList} from '../common_models/transaction.interface';
 import {BehaviorSubject, concat, of} from 'rxjs';
@@ -11,7 +11,8 @@ import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-m
 @Component({
   selector: 'app-transactions',
   templateUrl: './transactions.component.html',
-  styleUrls: ['./transactions.component.scss']
+  styleUrls: ['./transactions.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TransactionsComponent implements OnInit {
   public transactionPublisher: BehaviorSubject<PaginatedTransactionList | null>;
@@ -51,7 +52,7 @@ export class TransactionsComponent implements OnInit {
   public revertTransaction(transactionId: number): void {
     const modal = this.modalService.open(SimpleConfirmModalComponent);
     modal.componentInstance.message = 'Are you sure you want to revert this transaction?';
-    modal.dismissed.pipe(
+    modal.closed.pipe(
       switchMap((result: string) => result === 'ok' ?
         concat(
           this.transactionService.deleteTransaction(transactionId),

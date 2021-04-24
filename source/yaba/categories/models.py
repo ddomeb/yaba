@@ -6,7 +6,7 @@ class MainCategory(models.Model):
     class Meta:
         verbose_name_plural = "Main categories"
 
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=80)
     description = models.CharField(max_length=150)
     # color = models.CharField(max_length=)
     owner = models.ForeignKey(
@@ -24,7 +24,7 @@ class SubCategory(models.Model):
     class Meta:
         verbose_name_plural = "Subcategories"
 
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=80)
     description = models.CharField(max_length=150)
     owner = models.ForeignKey(
         User,

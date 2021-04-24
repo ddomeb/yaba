@@ -5,7 +5,6 @@ import {MainCategory, MainCategoryDetails} from '../../common_models/category.in
 import {BehaviorSubject} from 'rxjs';
 import {TransactionService} from '../transaction.service.';
 import {AccountInfo} from '../../common_models/account.interface';
-import {tap} from 'rxjs/operators';
 
 function makeDateFromModel(dateModel: NgbDateStruct | null): Date | undefined {
   if (!dateModel){

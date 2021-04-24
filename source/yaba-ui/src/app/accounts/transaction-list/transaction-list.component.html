@@ -7,12 +7,12 @@
 <div class="modal-body container">
   <table *ngIf="(currentPagePublisher | async)!.count > 0" class="table table-striped">
     <thead>
-    <tr>
-      <th scope="col">Date</th>
-      <th scope="col">Amount</th>
-      <th scope="col">Subcategory</th>
-      <th scope="col">Note</th>
-    </tr>
+      <tr>
+        <th scope="col">Date</th>
+        <th scope="col">Amount</th>
+        <th scope="col">Subcategory</th>
+        <th scope="col">Note</th>
+      </tr>
     </thead>
     <tbody>
     <tr *ngFor="let transaction of (currentPagePublisher | async)!.results; index as i">

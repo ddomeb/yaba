@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.parsers import JSONParser
@@ -5,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from accounts.models import Account
+from transactions.models import Transaction
 from yaba.common_utils import main_category_owned_by_requester
 from categories.serializers import (
     MainCategorySerializer,
@@ -12,6 +15,26 @@ from categories.serializers import (
     SubCategorySerializer,
     SubCategoryDetailsSerializer,
 )
+
+
+def revert_transactions_for_main_category(pk: int) -> None:
+    revert_transactions(
+        Transaction.objects.filter(subcategory__main_category__id=pk)
+    )
+
+
+def revert_transactions_for_sub_category(pk: int) -> None:
+    revert_transactions(
+        Transaction.objects.filter(subcategory__id=pk)
+    )
+
+
+def revert_transactions(query: QuerySet) -> None:
+    for tr in query:
+        account: Account = Account.objects.get(pk=tr.account.id)
+        account.balance -= tr.amount
+        account.save()
+        tr.delete()
 
 
 class MainCategoryView(viewsets.ViewSet):
@@ -38,12 +61,22 @@ class MainCategoryView(viewsets.ViewSet):
         serializer = MainCategoryDetailsSerializer(category)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    # TODO: update
+    @classmethod
+    def update(cls, request, pk=None) -> Response:
+        queryset = request.user.main_categories.all()
+        main_category = get_object_or_404(queryset, pk=pk)
+        data = JSONParser().parse(request)
+        serializer = MainCategorySerializer(main_category, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @classmethod
     def destroy(cls, request: Request, pk=None) -> Response:
         queryset = request.user.main_categories.all()
         main_category = get_object_or_404(queryset, pk=pk)
+        revert_transactions_for_main_category(main_category.id)
         main_category.delete()
         return Response(data=dict(), status=status.HTTP_200_OK)
 
@@ -79,11 +112,21 @@ class SubCategoryView(viewsets.ViewSet):
         serializer = SubCategoryDetailsSerializer(subcategory)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
-    # TODO: update
+    @classmethod
+    def update(cls, request, pk=None) -> Response:
+        queryset = request.user.subcategories.all()
+        subcategory = get_object_or_404(queryset, pk=pk)
+        data = JSONParser().parse(request)
+        serializer = MainCategorySerializer(subcategory, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     @classmethod
     def destroy(cls, request: Request, pk=None) -> Response:
         queryset = request.user.subcategories.all()
-        subcategories = get_object_or_404(queryset, pk=pk)
-        subcategories.delete()
+        subcategory = get_object_or_404(queryset, pk=pk)
+        revert_transactions_for_sub_category(subcategory.id)
+        subcategory.delete()
         return Response(data=dict(), status=status.HTTP_200_OK)

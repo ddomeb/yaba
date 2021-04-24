@@ -1,9 +1,12 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, concat, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 import {ApiService} from '../services/apiservice.service';
 import {MainCategory, MainCategoryDetails, SubCategory, SubCategoryDetails} from '../common_models/category.interface';
+
+class SubCategoryWithPk {
+}
 
 @Injectable({
   providedIn: 'root'
@@ -45,46 +48,47 @@ export class CategoriesService {
   }
 
   public deleteMainCategory(mainCategoryId: number): Observable<any> {
-    return this.apiService.delete(
-      CategoriesService.CATEGORIES_ENDPOINT + mainCategoryId.toString() + '/'
-    ).pipe(
-      tap(() => this.loadMainCategories())
+    return concat(
+      this.apiService.delete(CategoriesService.CATEGORIES_ENDPOINT + mainCategoryId.toString() + '/'),
+      this.loadMainCategories()
     );
   }
 
   public addMainCategory(mainCategory: MainCategory): Observable<any> {
-    return this.apiService.post(
-      CategoriesService.CATEGORIES_ENDPOINT,
-      mainCategory
-    ).pipe(
-      tap(() => this.loadMainCategories())
+    return concat(
+      this.apiService.post(CategoriesService.CATEGORIES_ENDPOINT, mainCategory),
+      this.loadMainCategories()
     );
   }
 
   public deleteSubCategory(subcategoryId: number): Observable<any> {
-    return this.apiService.delete(
-      CategoriesService.SUBCATEGORIES_ENDPOINT + subcategoryId.toString() + '/'
-    ).pipe(
-      tap(() => this.loadMainCategories()),
-      tap(() => {
-        if (this.currentMainCategory){
-          this.loadMainCategoryDetails(this.currentMainCategory.id);
-        }
-      })
+    return concat(
+      this.apiService.delete(CategoriesService.SUBCATEGORIES_ENDPOINT + subcategoryId.toString() + '/'),
+      this.loadMainCategories(),
+      this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)
     );
   }
 
-  public addSubCategory(subCategory: SubCategory): Observable<any> {
-    return this.apiService.post(
-      CategoriesService.SUBCATEGORIES_ENDPOINT,
-      subCategory
-    ).pipe(
-      tap(() => this.loadMainCategories()),
-      tap(() => {
-        if (this.currentMainCategory){
-          this.loadMainCategoryDetails(this.currentMainCategory.id);
-        }
-      })
+  public addSubCategory(subCategory: SubCategoryWithPk): Observable<any> {
+    return concat(
+      this.apiService.post(CategoriesService.SUBCATEGORIES_ENDPOINT, subCategory),
+      this.loadMainCategories(),
+      this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)
+    );
+  }
+
+  updateMainCategory(id: number, updatedCategory: MainCategory): Observable<any> {
+    return concat(
+      this.apiService.put(CategoriesService.CATEGORIES_ENDPOINT + id.toString() + '/', updatedCategory),
+      this.loadMainCategories(),
+      this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)
+    );
+  }
+
+  updateSubCategory(id: number, updatedCategory: MainCategory): Observable<any> {
+    return concat(
+      this.apiService.put(CategoriesService.SUBCATEGORIES_ENDPOINT + id.toString() + '/', updatedCategory),
+      this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)
     );
   }
 }

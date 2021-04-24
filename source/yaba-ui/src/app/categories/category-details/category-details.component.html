@@ -1,1 +1,62 @@
-<p>category-details works!</p>
+<div class="modal-header">
+  <form [formGroup]="form">
+    <div class="form-group row">
+      <label for="name" class="col-sm-2 col-form-label">Name</label>
+      <div class="col-sm-10">
+        <input type="text" autofocus="autofocus" style="display:none" />
+        <input  type="text" formControlName="name" class="form-control form-control-lg" id="name" required >
+        <div [hidden]="this.form.get('name')!.valid"
+             class="alert alert-danger">
+          Name is required
+        </div>
+      </div>
+    </div>
+  </form>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body container">
+  <div>
+    <form [formGroup]="form">
+      <div class="form-group row">
+        <label for="desc" class="col-sm-2 col-form-label">Description</label>
+        <div class="col-sm-10">
+          <textarea formControlName="description" class="form-control form-control" id="desc" rows="2" required></textarea>
+          <div [hidden]="this.form.get('description')!.valid"
+               class="alert alert-danger">
+            Description is required
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div>
+    <table *ngIf="(currentMainCategoryDetails | async)" class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col">Description</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let subcategory of ((currentMainCategoryDetails | async)?.subcategories)">
+          <td>{{subcategory.name}}</td>
+          <td>{{subcategory.description}}</td>
+          <td>
+            <button class="btn btn-outline-primary" (click)="editSubcategory(subcategory)">
+              Edit
+            </button>
+            <button class="btn btn-danger" (click)="deleteSubCategory(subcategory.id)">
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="addNewSubCategory()">Add subcategory</button>
+</div>
