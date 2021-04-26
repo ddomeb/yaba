@@ -3,10 +3,13 @@ import {BehaviorSubject, concat, Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 import {ApiService} from '../services/apiservice.service';
-import {MainCategory, MainCategoryDetails, SubCategory, SubCategoryDetails} from '../common_models/category.interface';
-
-class SubCategoryWithPk {
-}
+import {
+  MainCategory,
+  MainCategoryDetails,
+  SubCategory,
+  SubCategoryDetails,
+  SubcategoryWithPk
+} from '../common_models/category.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -69,7 +72,7 @@ export class CategoriesService {
     );
   }
 
-  public addSubCategory(subCategory: SubCategoryWithPk): Observable<any> {
+  public addSubCategory(subCategory: SubcategoryWithPk): Observable<any> {
     return concat(
       this.apiService.post(CategoriesService.SUBCATEGORIES_ENDPOINT, subCategory),
       this.loadMainCategories(),
