@@ -57,8 +57,7 @@ export class TransactionService {
     //   })
     // );
     page = page ? page : 1;
-    const response: Observable<PaginatedTransactionList> = this.queryTransactionsWithPagination(params, page);
-    return response.pipe(
+    return  this.queryTransactionsWithPagination(params, page).pipe(
       tap((results: PaginatedTransactionList) => {
         this.transactions = results;
         this.transactionsPublisher.next(this.transactions);

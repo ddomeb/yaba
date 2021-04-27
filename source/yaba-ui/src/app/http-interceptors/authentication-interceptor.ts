@@ -21,6 +21,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     'authentication/login/',
     'token/refresh/',
     'register/',
+    'authentication/logout/',
   ];
 
   private isWhiteListed(url: string): boolean {
@@ -36,10 +37,11 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.isWhiteListed(req.url)) { return next.handle(req); }
-
+    if (this.isWhiteListed(req.url)) { console.log('interceptor whitelist:', req); return next.handle(req); }
+    console.log('interceptor');
     const sessionData: string | null = localStorage.getItem('session_info');
     if (sessionData === null) {
+      console.log('interceptor, session null: ', req);
       return next.handle(req).pipe(
         tap(
           () => {},
@@ -61,12 +63,15 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     const session: SessionInfo = JSON.parse(sessionData);
 
     if (!accessTokenIsExpired(session)) {
+      console.log('interceptor, access token valid: ', req);
       return next.handle(this.addAccessTokenToRequest(req, session));
     }
     else if (!refreshTokenTokenIsExpired(session)) {
+      console.log('interceptor, refresh token valid');
       const authenticationService: AuthenticationService = this.injector.get(AuthenticationService);
       return authenticationService.refreshAccessToken().pipe(
         switchMap((newSession: SessionInfo) => {
+          console.log('interceptor, refresh successful: ', req);
           return next.handle(this.addAccessTokenToRequest(req, newSession));
         }),
         catchError(() => next.handle(req))
@@ -74,6 +79,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     }
     else {
       AuthenticationService.clearSession();
+      console.log('interceptor, no valid token: ', req);
       return next.handle(req).pipe(
         tap(
           () => {},

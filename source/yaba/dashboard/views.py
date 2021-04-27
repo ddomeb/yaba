@@ -159,25 +159,26 @@ def generate_category_grouped_queryset(base_query):
     bud_tz = timezone('Europe/Budapest')
     from_date = datetime.datetime.now(bud_tz).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     transactions = base_query \
-        .filter(created__gte=from_date, amount__gt=0) \
+        .filter(created__gte=from_date, amount__lt=0) \
         .select_related("subcategory__main_category") \
-        .values('amount', 'subcategory__main_category__name')
+        .values('amount', 'subcategory__main_category__name', 'subcategory__main_category__id')
     sum_dict = defaultdict(lambda: 0)
     for transaction in transactions:
-        sum_dict[transaction['subcategory__main_category__name']] += transaction['amount']
+        sum_dict[(transaction['subcategory__main_category__name'], transaction['subcategory__main_category__id'])] \
+            -= transaction['amount']
 
-    return [{'name': item[0], 'value': item[1]} for item in sum_dict.items()]
+    return [{'name': item[0][0], 'value': item[1], 'extra': {'id': item[0][1]}} for item in sum_dict.items()]
 
 
 def generate_subcategory_grouped_queryset(base_query, category_pk):
     bud_tz = timezone('Europe/Budapest')
     from_date = datetime.datetime.now(bud_tz).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     transactions = base_query \
-        .filter(created__gte=from_date, amount__gt=0, subcategory__main_category__id=category_pk) \
+        .filter(created__gte=from_date, amount__lt=0, subcategory__main_category__id=category_pk) \
         .select_related("subcategory") \
-        .values('amount', 'subcategory__name')
+        .values('amount', 'subcategory__name', 'subcategory__id')
     sum_dict = defaultdict(lambda: 0)
     for transaction in transactions:
-        sum_dict[transaction['subcategory__name']] += transaction['amount']
+        sum_dict[(transaction['subcategory__name'], transaction['subcategory__id'])] -= transaction['amount']
 
-    return [{'name': item[0], 'value': item[1]} for item in sum_dict.items()]
+    return [{'name': item[0][0], 'value': item[1], 'extra': {'id': item[0][1]}} for item in sum_dict.items()]

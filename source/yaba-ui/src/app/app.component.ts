@@ -11,9 +11,11 @@ import {AuthenticationService} from './services/authentication.service';
 export class AppComponent{
   title = 'Yaba';
   public isLoggedInPublisher: BehaviorSubject<boolean>;
+  public contentLoadable = new BehaviorSubject<boolean>(false);
 
   constructor(private authenticationService: AuthenticationService) {
     this.isLoggedInPublisher = this.authenticationService.loggedInPublisher;
+    this.authenticationService.loadSessionStatus().subscribe(() => this.contentLoadable.next(true));
   }
 
   public logout(): void {

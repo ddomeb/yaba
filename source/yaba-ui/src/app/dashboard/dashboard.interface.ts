@@ -23,7 +23,7 @@ export interface StatsResponse {
     expense: number;
     income: number;
   };
-  lastMonth: {
+  prevMonth: {
     expense: number;
     income: number;
   };
@@ -32,4 +32,7 @@ export interface StatsResponse {
 export interface SeriesData {
   name: string;
   value: number;
+  extra?: any;
 }
+
+

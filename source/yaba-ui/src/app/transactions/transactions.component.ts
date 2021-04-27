@@ -38,15 +38,18 @@ export class TransactionsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.transactionService.queryTransactions(this.currentPage).pipe(
-      tap((response: PaginatedTransactionList) => {
-        this.showPaginationLinks = {
-          next: response.pages > this.currentPage,
-          previous: this.currentPage > 1
-        };
-        this.showPaginationLinksPublisher.next(this.showPaginationLinks);
-      })
-    ).subscribe();
+    concat(
+      this.transactionService.loadAccounts(),
+      this.transactionService.loadMainCategories(),
+      this.transactionService.queryTransactions(this.currentPage).pipe(
+        tap((response: PaginatedTransactionList) => {
+          this.showPaginationLinks = {
+            next: response.pages > this.currentPage,
+            previous: this.currentPage > 1
+          };
+          this.showPaginationLinksPublisher.next(this.showPaginationLinks);
+        })
+    )).subscribe();
   }
 
   public revertTransaction(transactionId: number): void {

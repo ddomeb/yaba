@@ -1,1 +1,81 @@
-<p>dashboard works!</p>
+<div class="container-xl mb-3">
+  <div>
+    <div id="monthly-stats" class="card">
+      <div class="card-header text-center">
+        Monthly cash-flow stats
+      </div>
+      <div *ngIf="(dashDataPublisher | async) && (dashDataPublisher | async)!.monthlyStats" class="card-body">
+        <div class="row">
+          <div class="col text-center">
+            <p>last month</p>
+          </div>
+          <div class="col text-center">
+            <p>this month</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="col row">
+              <div class="col text-center income">
+                <span class="number">{{(dashDataPublisher | async)!.monthlyStats!.lastMonth.income}}</span>
+                <span class="f"> HUF</span>
+              </div>
+              <div class="col text-center">
+                <div *ngIf="(dashDataPublisher | async)!.monthlyStats!.lastMonth.sum < 0"  class="expense">
+                <span class="number">
+                  {{(dashDataPublisher | async)!.monthlyStats!.lastMonth.sum}}
+                </span>
+                  <span class="f"> HUF</span>
+                </div>
+                <div *ngIf="(dashDataPublisher | async)!.monthlyStats!.lastMonth.sum >= 0" class="income">
+                <span class="number">
+                  {{(dashDataPublisher | async)!.monthlyStats!.lastMonth.sum}}
+                </span>
+                  <span class="f"> HUF</span>
+                </div>
+              </div>
+              <div class="col text-center expense">
+                <span class="expense number">{{(dashDataPublisher | async)!.monthlyStats!.lastMonth.expense}}</span>
+                <span class="f"> HUF</span>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="col row">
+              <div class="col text-center income">
+                <span class="number">{{(dashDataPublisher | async)!.monthlyStats!.thisMonth.income}}</span>
+                <span class="f"> HUF</span>
+              </div>
+              <div class="col text-center">
+                <div *ngIf="(dashDataPublisher | async)!.monthlyStats!.thisMonth.sum < 0"  class="expense">
+                <span class="number">
+                  {{(dashDataPublisher | async)!.monthlyStats!.thisMonth.sum}}
+                </span>
+                  <span class="f"> HUF</span>
+                </div>
+                <div *ngIf="(dashDataPublisher | async)!.monthlyStats!.thisMonth.sum >= 0" class="income">
+                <span class="number">
+                  {{(dashDataPublisher | async)!.monthlyStats!.thisMonth.sum}}
+                </span>
+                  <span class="f"> HUF</span>
+                </div>
+              </div>
+              <div class="col text-center expense">
+                <span class="number">{{(dashDataPublisher | async)!.monthlyStats!.thisMonth.expense}}</span>
+                <span class="f"> HUF</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row card">
+    <div class="card-header">
+      Monthly expenses by category
+    </div>
+    <div class="card-body">
+      <app-expense-piechart></app-expense-piechart>
+    </div>
+  </div>
+</div>

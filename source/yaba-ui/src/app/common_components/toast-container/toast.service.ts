@@ -9,15 +9,15 @@ export class ToastService {
   }
 
   showSuccess(msg: string): void {
-    this.show(msg, { classname: 'bg-success text-light', delay: 10000 });
+    this.show(msg, { classname: 'bg-success text-light', delay: 1000 });
   }
 
   showDanger(msg: string): void {
-    this.show(msg, { classname: 'bg-danger text-light', delay: 15000 });
+    this.show(msg, { classname: 'bg-danger text-light', delay: 1500 });
   }
 
   show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
-    this.toasts.push({ textOrTpl, ...options });
+    this.toasts = [{ textOrTpl, ...options }];
   }
 
   remove(toast: any): void {

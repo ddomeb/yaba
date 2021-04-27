@@ -4,15 +4,16 @@ import {DashboardInterface, SeriesData, StatsResponse} from './dashboard.interfa
 import {tap} from 'rxjs/operators';
 import {TransactionDetails} from '../common_models/transaction.interface';
 import {BehaviorSubject, concat, Observable} from 'rxjs';
+import {HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DashboardService {
-  public static DASHBOARD_URL = '/dashboard';
-  public static MONTHLY_STAT_URL = DashboardService.DASHBOARD_URL + '/monthly_stats/';
-  public static LAST_TRANSACTIONS_URL = DashboardService.DASHBOARD_URL + '/transaction_history/';
-  public static EXPENSE_STATS_URL = DashboardService.DASHBOARD_URL + '/expense_stats/';
+  public static DASHBOARD_URL = 'dashboard/';
+  public static MONTHLY_STAT_URL = DashboardService.DASHBOARD_URL + 'monthly_stats/';
+  public static LAST_TRANSACTIONS_URL = DashboardService.DASHBOARD_URL + 'transaction_history/';
+  public static EXPENSE_STATS_URL = DashboardService.DASHBOARD_URL + 'expense_stats/';
 
   private dashData: DashboardInterface = {};
   public dashDataPublisher = new BehaviorSubject<DashboardInterface | null>(null);
@@ -22,14 +23,14 @@ export class DashboardService {
     this.loadData();
   }
 
-  public loadData(): void {
-    concat(
+  public loadData(): Observable<any> {
+    return concat(
       this.loadMonthlyStats(),
       this.loadLastTransactions(),
       this.loadExpenseStats(),
     ).pipe(
       tap(() => this.dashDataPublisher.next(this.dashData))
-    ).subscribe();
+    );
   }
 
   public loadSubCategoryStats(id: number): void {
@@ -42,17 +43,17 @@ export class DashboardService {
     return this.apiService.get<StatsResponse>(DashboardService.MONTHLY_STAT_URL).pipe(
       tap((response: StatsResponse) => {
         this.dashData.monthlyStats = {
-          thisMonth: {...response.thisMonth, sum: response.thisMonth.income - response.thisMonth.expense},
-          lastMonth: {...response.lastMonth, sum: response.lastMonth.income - response.lastMonth.expense}
+          thisMonth: {...response.thisMonth, sum: response.thisMonth.income + response.thisMonth.expense},
+          lastMonth: {...response.prevMonth, sum: response.prevMonth.income + response.prevMonth.expense}
         };
       })
     );
   }
 
-  // TODO send count as query string
   private loadLastTransactions(count: number = 10): Observable<TransactionDetails[]> {
+    const params = new HttpParams().set('count', count.toString());
     return this.apiService.get<TransactionDetails[]>(
-      DashboardService.LAST_TRANSACTIONS_URL + count.toString() + '/'
+      DashboardService.LAST_TRANSACTIONS_URL, undefined, params
     ).pipe(
       tap((response: TransactionDetails[]) => {
         this.dashData.lastTransactions = response;

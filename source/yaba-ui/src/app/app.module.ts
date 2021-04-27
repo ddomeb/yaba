@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {HttpClientModule, HttpClientXsrfModule} from '@angular/common/http';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {LineChartModule} from '@swimlane/ngx-charts';
+import {LineChartModule, NgxChartsModule} from '@swimlane/ngx-charts';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 import {AppRoutingModule} from './app-routing.module';
@@ -27,6 +27,7 @@ import { SimpleConfirmModalComponent } from './common_components/simple-confirm-
 import { CategoryDetailsComponent } from './categories/category-details/category-details.component';
 import { NewCategoryComponent } from './categories/new-category/new-category.component';
 import { ToastContainerComponent } from './common_components/toast-container/toast-container.component';
+import { ExpensePiechartComponent } from './dashboard/expense-piechart/expense-piechart.component';
 
 @NgModule({
   declarations: [
@@ -47,17 +48,19 @@ import { ToastContainerComponent } from './common_components/toast-container/toa
     CategoryDetailsComponent,
     NewCategoryComponent,
     ToastContainerComponent,
+    ExpensePiechartComponent,
   ],
   imports: [
-      BrowserModule,
-      AppRoutingModule,
-      FormsModule,
-      BrowserAnimationsModule,
-      HttpClientModule,
-      HttpClientXsrfModule,
-      ReactiveFormsModule,
-      NgbModule,
-      LineChartModule,
+    BrowserModule,
+    AppRoutingModule,
+    FormsModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    HttpClientXsrfModule,
+    ReactiveFormsModule,
+    NgbModule,
+    LineChartModule,
+    NgxChartsModule,
   ],
   providers: [
     ApiService,
