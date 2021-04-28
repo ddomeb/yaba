@@ -28,6 +28,8 @@ import { CategoryDetailsComponent } from './categories/category-details/category
 import { NewCategoryComponent } from './categories/new-category/new-category.component';
 import { ToastContainerComponent } from './common_components/toast-container/toast-container.component';
 import { ExpensePiechartComponent } from './dashboard/expense-piechart/expense-piechart.component';
+import { ExpenseCardGridComponent } from './dashboard/expense-card-grid/expense-card-grid.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -49,6 +51,8 @@ import { ExpensePiechartComponent } from './dashboard/expense-piechart/expense-p
     NewCategoryComponent,
     ToastContainerComponent,
     ExpensePiechartComponent,
+    ExpenseCardGridComponent,
+    AboutComponent,
   ],
   imports: [
     BrowserModule,

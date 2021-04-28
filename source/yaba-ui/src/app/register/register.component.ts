@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {RegisterService} from './register.service';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {catchError, tap} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {AuthenticationService} from '../services/authentication.service';
 import {AuthenticationResponse} from '../common_models/authentication.interface';
 import {Router} from '@angular/router';
@@ -13,10 +13,11 @@ import {ToastService} from '../common_components/toast-container/toast.service';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RegisterComponent implements OnInit {
   public form: FormGroup;
+  public showBackendErrors = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly registerService: RegisterService,
@@ -93,19 +94,19 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     if (!this.form.valid) { return; }
-
+    this.showBackendErrors.next(false);
     this.registerService.sendRegistration(this.form.value.username, this.form.value.password1, this.form.value.email).pipe(
       tap(() => {
         this.form.get('password1')?.setValue('');
         this.form.get('password2')?.setValue('');
       }),
-      tap(res => console.log('tap tap')),
       catchError(err => this.handleError(err))
     ).subscribe(result => this.handleRegistrationResult(result));
   }
 
   private handleRegistrationResult(result: any): void {
     if (result === false) {
+      console.log(this.form.controls.username.errors);
       return;
     }
     const response = result as AuthenticationResponse;
@@ -120,14 +121,18 @@ export class RegisterComponent implements OnInit {
       this.toast.showDanger('Something went wrong, please try again later.');
       return of(false);
     }
+    console.log(error);
     if (error.error.email) {
-      this.form.get('email')?.setErrors({errors: error.error.email});
+      this.form.controls.email.setErrors({errors: error.error.email.join(' ')});
+      this.showBackendErrors.next(true);
     }
     if (error.error.username) {
-      this.form.get('username')?.setErrors({errors: error.error.usrname});
+      this.form.controls.username.setErrors({errors: error.error.username.join(' ')}, {emitEvent: true});
+      this.showBackendErrors.next(true);
     }
-    if (error.error.password) {
-      this.form.get('password1')?.setErrors({errors: error.error.password});
+    if (error.error.password1) {
+      this.form.controls.password1.setErrors({errors: error.error.password1.join(' ')});
+      this.showBackendErrors.next(true);
     }
     return of(false);
   }

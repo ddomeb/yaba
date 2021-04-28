@@ -14,3 +14,13 @@
 .f {
   font-size: 0.7em
 }
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.common-width {
+  width: 100%;
+}

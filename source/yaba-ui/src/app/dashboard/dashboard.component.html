@@ -1,6 +1,6 @@
 <div class="container-xl mb-3">
   <div>
-    <div id="monthly-stats" class="card">
+    <div id="monthly-stats" class="row card common-width">
       <div class="card-header text-center">
         Monthly cash-flow stats
       </div>
@@ -70,12 +70,23 @@
       </div>
     </div>
   </div>
-  <div class="row card">
+  <div class="row card common-width">
     <div class="card-header">
       Monthly expenses by category
     </div>
     <div class="card-body">
       <app-expense-piechart></app-expense-piechart>
+    </div>
+  </div>
+  <div class="row card common-width">
+    <div class="card-header">
+      Monthly expenses by subcategory
+    </div>
+    <div class="card-body center" *ngIf="(subCatStatPublisher | async)">
+      <app-expense-card-grid class="mx-auto"></app-expense-card-grid>
+    </div>
+    <div class="card-body text-center" *ngIf="!(subCatStatPublisher | async)">
+      <h3>Please select a category</h3>
     </div>
   </div>
 </div>

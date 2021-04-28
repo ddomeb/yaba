@@ -1,0 +1,14 @@
+h1 {
+  background: blue url('https://picsum.photos/id/1015/200/300');
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-top: 20px;
+  font-size: 120px;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 45px;
+  }
+}

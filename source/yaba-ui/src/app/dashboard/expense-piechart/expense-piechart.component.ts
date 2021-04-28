@@ -35,6 +35,6 @@ export class ExpensePiechartComponent implements OnInit {
   }
 
   onSelect($event: any): void {
-    console.log($event);
+    this.dashService.loadSubCategoryStats($event.extra.id);
   }
 }

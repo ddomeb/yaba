@@ -1,0 +1,9 @@
+<ng-container *ngIf="(data | async)">
+  <ngx-charts-number-card
+    [view]="view"
+    [scheme]="colorScheme"
+    [results]="(data | async)"
+    [cardColor]="cardColor"
+    (select)="onSelect($event)">
+  </ngx-charts-number-card>
+</ng-container>

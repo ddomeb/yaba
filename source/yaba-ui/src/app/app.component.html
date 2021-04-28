@@ -1,8 +1,13 @@
 <ng-container>
   <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
-    <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
+    <ng-container *ngIf="isLoggedInPublisher | async">
+      <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
+    </ng-container>
+    <ng-container *ngIf="!(isLoggedInPublisher | async)">
+      <p class="h5 my-0 me-md-auto fw-normal" routerLink="about">Yaba</p>
+    </ng-container>
     <nav class="my-2 my-md-0 me-md-3">
-      <a class="p-2 text-dark" href="#">What's Yaba?</a>
+      <a class="p-2 text-dark" routerLink="about">What's Yaba?</a>
       <ng-container *ngIf="isLoggedInPublisher | async">
         <a class="p-2 text-dark" routerLink="accounts">Accounts</a>
         <a class="p-2 text-dark" routerLink="transactions">Transactions</a>
@@ -15,6 +20,7 @@
     </ng-container>
     <ng-container *ngIf="isLoggedInPublisher | async">
       <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
+      <a class="btn btn-outline-primary">Profile</a>
     </ng-container>
     </header>
   <div>

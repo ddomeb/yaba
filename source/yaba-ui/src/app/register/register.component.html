@@ -1,31 +1,55 @@
-<div class="content">
-  <form class="form-group" [formGroup]="form">
-    <div class="form-group row">
-      <label for="user" class="col-2 col-form-label">Username</label>
-      <div class="col-10">
-        <input formControlName="username" class="form-control" type="text"  id="user">
+<div class="container-sm">
+  <div class="text-center my-5">
+    <h2>Register</h2>
+    <h4>Please enter your data!</h4>
+  </div>
+  <div class="form-group">
+    <form [formGroup]="form">
+      <div class="form-group row justify-content-md-center">
+        <label for="user" class="col-2 col-form-label">Username</label>
+        <div class="col-4">
+          <input formControlName="username" class="form-control" type="text"  id="user">
+          <small class="form-text text-muted" *ngIf="!form.controls.username?.errors">
+            Valid characters: A-Z, a-z, 0-9, + - _ @.
+          </small>
+          <small class="form-text text-danger" *ngIf="showBackendErrors | async">
+            {{form.controls.username!.errors?.errors}}
+          </small>
+        </div>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="email" class="col-2 col-form-label">E-mail</label>
-      <div class="col-10">
-        <input formControlName="email" class="form-control" type="email"  id="email">
+      <div class="form-group row justify-content-md-center">
+        <label for="email" class="col-2 col-form-label">E-mail</label>
+        <div class="col-4">
+          <input formControlName="email" class="form-control" type="email"  id="email">
+          <small class="form-text text-danger" *ngIf="showBackendErrors | async">
+            {{form.get('email')!.errors?.errors}}
+          </small>
+        </div>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="pass1" class="col-2 col-form-label">Password</label>
-      <div class="col-10">
-        <input formControlName="password1" class="form-control" type="password" id="pass1">
+      <div class="form-group row justify-content-md-center">
+        <label for="pass1" class="col-2 col-form-label">Password</label>
+        <div class="col-4">
+          <input formControlName="password1" class="form-control" type="password" id="pass1">
+          <small class="form-text text-muted">
+            Must be at least 8 characters, and contain at least 1 non-numeric character. Valid characters: A-Z, a-z, 0-9, + - _ @.
+          </small>
+          <small class="form-text text-danger" *ngIf="showBackendErrors | async">
+            {{form.get('password1')!.errors?.errors}}
+          </small>
+        </div>
       </div>
-    </div>
-    <div class="form-group row">
-      <label for="pass2" class="col-2 col-form-label">Confirm password</label>
-      <div class="col-10">
-        <input formControlName="password2" class="form-control" type="password" id="pass2">
+      <div class="form-group row justify-content-md-center">
+        <label for="pass2" class="col-2 col-form-label">Confirm password</label>
+        <div class="col-4">
+          <input formControlName="password2" class="form-control" type="password" id="pass2">
+          <small class="form-text text-danger" *ngIf="form.get('password2')!.errors">
+            {{form.get('password2')!.errors?.notMatch}}
+          </small>
+        </div>
       </div>
+    </form>
+    <div class="align-items-center justify-content-center my-5" style="display: flex">
+      <button type="submit" class="btn-lg btn-primary" (click)="onSubmit()">Submit</button>
     </div>
-  </form>
-  <div class="container">
-    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
   </div>
 </div>
