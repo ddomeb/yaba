@@ -106,14 +106,13 @@ export class RegisterComponent implements OnInit {
 
   private handleRegistrationResult(result: any): void {
     if (result === false) {
-      console.log(this.form.controls.username.errors);
       return;
     }
     const response = result as AuthenticationResponse;
     AuthenticationService.setSession(response);
     this.authService.loggedInPublisher.next(true);
     this.toast.showSuccess('Registration successful, Welcome!');
-    this.router.navigateByUrl('/');
+    this.router.navigate(['about']);
   }
 
   private handleError(error: any): Observable<any> {
@@ -121,13 +120,12 @@ export class RegisterComponent implements OnInit {
       this.toast.showDanger('Something went wrong, please try again later.');
       return of(false);
     }
-    console.log(error);
     if (error.error.email) {
       this.form.controls.email.setErrors({errors: error.error.email.join(' ')});
       this.showBackendErrors.next(true);
     }
     if (error.error.username) {
-      this.form.controls.username.setErrors({errors: error.error.username.join(' ')}, {emitEvent: true});
+      this.form.controls.username.setErrors({errors: error.error.username.join(' ')});
       this.showBackendErrors.next(true);
     }
     if (error.error.password1) {

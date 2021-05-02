@@ -6,8 +6,8 @@ class MainCategory(models.Model):
     class Meta:
         verbose_name_plural = "Main categories"
 
-    name = models.CharField(max_length=80)
-    description = models.CharField(max_length=150)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=100)
     # color = models.CharField(max_length=)
     owner = models.ForeignKey(
         User,

@@ -27,7 +27,7 @@ export class NewCategoryComponent {
             [
               Validators.required,
               Validators.minLength(1),
-              Validators.maxLength(80)
+              Validators.maxLength(50)
             ]
           )
         ),
@@ -36,7 +36,7 @@ export class NewCategoryComponent {
             [
               Validators.required,
               Validators.minLength(1),
-              Validators.maxLength(150)
+              Validators.maxLength(100)
             ]
           ))
       }

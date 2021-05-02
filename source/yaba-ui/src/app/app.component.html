@@ -1,28 +1,52 @@
 <ng-container>
-  <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
-    <ng-container *ngIf="isLoggedInPublisher | async">
-      <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
-    </ng-container>
-    <ng-container *ngIf="!(isLoggedInPublisher | async)">
-      <p class="h5 my-0 me-md-auto fw-normal" routerLink="about">Yaba</p>
-    </ng-container>
-    <nav class="my-2 my-md-0 me-md-3">
-      <a class="p-2 text-dark" routerLink="about">What's Yaba?</a>
-      <ng-container *ngIf="isLoggedInPublisher | async">
-        <a class="p-2 text-dark" routerLink="accounts">Accounts</a>
-        <a class="p-2 text-dark" routerLink="transactions">Transactions</a>
-        <a class="p-2 text-dark" routerLink="categories">Categories</a>
-      </ng-container>
-    </nav>
-    <ng-container *ngIf="!(isLoggedInPublisher | async)">
-      <a class="btn btn-outline-primary" routerLink="login">Log in</a>
-      <a class="btn btn-outline-primary" routerLink="register">Register</a>
-    </ng-container>
-    <ng-container *ngIf="isLoggedInPublisher | async">
-      <a class="btn btn-outline-primary" (click)="logout()">Logout</a>
-      <a class="btn btn-outline-primary">Profile</a>
-    </ng-container>
+  <div class="container">
+  <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <ng-container *ngIf="isLoggedInPublisher | async">
+          <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
+        </ng-container>
+        <ng-container *ngIf="!(isLoggedInPublisher | async)">
+          <p class="h5 my-0 me-md-auto fw-normal" routerLink="about">Yaba</p>
+        </ng-container>
+        <nav class="my-2 my-md-0 me-md-3">
+          <a class="p-2 text-dark" routerLink="about">What's Yaba?</a>
+          <ng-container *ngIf="isLoggedInPublisher | async">
+            <a class="p-2 text-dark" routerLink="accounts">Accounts</a>
+            <a class="p-2 text-dark" routerLink="transactions">Transactions</a>
+            <a class="p-2 text-dark" routerLink="categories">Categories</a>
+          </ng-container>
+        </nav>
+        <ng-container *ngIf="!(isLoggedInPublisher | async)">
+          <a class="btn btn-outline-primary" routerLink="login">Log in</a>
+          <a class="btn btn-outline-primary" routerLink="register">Register</a>
+        </ng-container>
+        <ng-container *ngIf="isLoggedInPublisher | async" class="mr-auto">
+          <div ngbDropdown class="d-inline-block">
+            <i-bs
+              name="person-circle"
+              width="2rem"
+              height="2rem" ngbDropdownToggle>
+            </i-bs>
+            <div ngbDropdownMenu>
+              <div class="row ml-3">
+                <i-bs name="file-person-fill" width="1em" height="1.1em" class="mr-2"></i-bs>
+                <p class="text-center">
+                  Hi, <span class="text-monospace">{{(userDataPublisher | async)?.username}}</span>
+                </p>
+              </div>
+              <div class="row ml-3">
+                <i-bs name="envelope" width="1.1em" height="1.1em" class="mr-2"></i-bs>
+                <small>{{(userDataPublisher | async)?.email}}</small>
+              </div>
+              <div class="dropdown-divider"></div>
+              <button ngbDropdownItem (click)="changePass()" class="mr-5">Change password</button>
+              <button ngbDropdownItem (click)="logout()">Logout</button>
+            </div>
+          </div>
+        </ng-container>
+      </div>
     </header>
+  </div>
   <div>
     <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
     <router-outlet *ngIf="contentLoadable | async"></router-outlet>

@@ -1,4 +1,3 @@
-<script src="categories.component.ts"></script>
 <div class="container">
   <section class="jumbotron text-center">
     <div class="container">
@@ -8,9 +7,8 @@
       </p>
     </div>
   </section>
-  <div class="album py-5 bg-light">
+  <div class="album py-5 bg-light mb-3">
     <div class="container">
-
       <div class="row">
         <div *ngFor="let category of (mainCategories | async)" class="col-md-4">
           <div class="card mb-4 box-shadow" >
@@ -26,6 +24,11 @@
                 <div class="btn-group">
                   <button type="button" class="btn btn-sm btn-outline-secondary" (click)="showCategoryDetails(category)">
                     View details and subcategories
+                  </button>
+                </div>
+                <div class="btn-group">
+                  <button class="btn-danger btn-sm center" (click)="deleteMainCategory(category.id)" >
+                    <i-bs name="trash" width="1.1em" height="1.1em"></i-bs>
                   </button>
                 </div>
               </div>

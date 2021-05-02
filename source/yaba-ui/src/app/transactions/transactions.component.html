@@ -6,8 +6,8 @@
   <div class="container">
     <app-transaction-filter (applyParams)="queryTransactions($event)"></app-transaction-filter>
   </div>
-  <ng-container *ngIf="(transactionPublisher | async)?.results">
-    <table class="table table-striped">
+  <ng-container *ngIf="(transactionPublisher | async) && (transactionPublisher | async)!.count > 0">
+    <table class="table text-center">
       <thead>
       <tr>
         <th scope="col">Date</th>
@@ -20,7 +20,9 @@
       <tbody>
           <tr *ngFor="let transaction of (transactionPublisher | async)!.results">
             <th scope="row">{{ transaction.created | date: "YYYY.MM.dd hh:mm" }}</th>
-            <td>{{transaction.amount}}</td>
+            <td [ngClass]="{'table-success': transaction.amount > 0, 'table-danger': transaction.amount < 0}">
+              {{transaction.amount}} HUF
+            </td>
             <td>{{transaction.account.name}}</td>
             <td>{{transaction.subcategory.name}}</td>
             <td>{{transaction.note}}</td>
@@ -30,24 +32,26 @@
           </tr>
       </tbody>
     </table>
-    <nav>
-      <ul class="pagination">
-        <li *ngIf="(showPaginationLinksPublisher | async)!.previous" class="page-item">
-          <button class="page-link" (click)="changePage(-1)" tabindex="-1">Previous</button>
-        </li>
-        <li *ngIf="!(showPaginationLinksPublisher | async)!.previous" class="page-item disabled">
-          <button class="page-link" tabindex="-1">Previous</button>
-        </li>
-        <li *ngIf="(showPaginationLinksPublisher | async)!.next" class="page-item">
-          <button class="page-link" (click)="changePage(1)" tabindex="-1">Next</button>
-        </li>
-        <li *ngIf="!(showPaginationLinksPublisher | async)!.next" class="page-item disabled">
-          <button class="page-link" tabindex="-1">Next</button>
-        </li>
-      </ul>
-    </nav>
+    <div class="center">
+      <nav>
+        <ul class="pagination">
+          <li *ngIf="(showPaginationLinksPublisher | async)!.previous" class="page-item">
+            <button class="page-link" (click)="changePage(-1)" tabindex="-1">Previous</button>
+          </li>
+          <li *ngIf="!(showPaginationLinksPublisher | async)!.previous" class="page-item disabled">
+            <button class="page-link" tabindex="-1">Previous</button>
+          </li>
+          <li *ngIf="(showPaginationLinksPublisher | async)!.next" class="page-item">
+            <button class="page-link" (click)="changePage(1)" tabindex="-1">Next</button>
+          </li>
+          <li *ngIf="!(showPaginationLinksPublisher | async)!.next" class="page-item disabled">
+            <button class="page-link" tabindex="-1">Next</button>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </ng-container>
-  <ng-container *ngIf="!(transactionPublisher | async)?.results">
+  <ng-container *ngIf="!(transactionPublisher | async) || (transactionPublisher | async)!.count === 0">
     <p>No transactions yet.</p>
   </ng-container>
 </div>

@@ -42,14 +42,14 @@
         <label for="pass2" class="col-2 col-form-label">Confirm password</label>
         <div class="col-4">
           <input formControlName="password2" class="form-control" type="password" id="pass2">
-          <small class="form-text text-danger" *ngIf="form.get('password2')!.errors">
+          <small class="form-text text-danger" *ngIf="form.get('password2')!.errors && form.get('password1')!.valid">
             {{form.get('password2')!.errors?.notMatch}}
           </small>
         </div>
       </div>
     </form>
     <div class="align-items-center justify-content-center my-5" style="display: flex">
-      <button type="submit" class="btn-lg btn-primary" (click)="onSubmit()">Submit</button>
+      <button type="submit" [disabled]="!form.valid" class="btn-lg btn-primary" (click)="onSubmit()">Submit</button>
     </div>
   </div>
 </div>

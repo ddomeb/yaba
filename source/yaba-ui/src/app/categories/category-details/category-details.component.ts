@@ -38,17 +38,12 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       tap((response: MainCategoryDetails) => {
         if (this.form.contains('name')){
           // tslint:disable-next-line:no-non-null-assertion
-          this.form.get('name')!.setValue(response.name, {emitEvent: false});
+          this.form.get('name')!.setValue(response.name, {emitEvent: true});
         }
         if (this.form.contains('description')){
           // tslint:disable-next-line:no-non-null-assertion
           this.form.get('description')!.setValue(response.description, {emitEvent: false});
         }
-        this.form.valueChanges.pipe(
-          debounceTime(1000),
-          switchMap(res => this.form.valid ? this.updateMainCategory(res) : of(false)),
-          takeUntil(this.unsubscribe),
-        ).subscribe();
       }),
       catchError(() => of(false))
     ).subscribe();
@@ -68,20 +63,6 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  deleteMainCategory(subCategoryId: number): void {
-    const modalRef = this.modalService.open(SimpleConfirmModalComponent);
-    modalRef.componentInstance.message =
-      'Are you sure you want to delete this category?\nThis will also delete all of it\'s subcategories and revert all transactions associated with it.';
-    modalRef.closed.pipe(
-      switchMap(
-        (result: string) => result === 'ok' ? this.categoryService.deleteMainCategory(subCategoryId) : of(false)),
-    ).subscribe(result => {
-      if (!result) {
-        this.activeModal.close('deleted');
-      }
-    });
-  }
-
   addNewSubCategory(): void {
     const modalRef = this.modalService.open(NewCategoryComponent);
     modalRef.componentInstance.isSubcategory = true;
@@ -92,9 +73,9 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     this.unsubscribe.next();
   }
 
-  private updateMainCategory(res: any): Observable<any> {
-    if (!this.form.valid) {
-      return of(false);
+  public updateMainCategory(): void {
+    if (!this.form.valid || this.form.pristine) {
+      return;
     }
     const updatedCategory: MainCategory = {
       description: this.form.value.description,
@@ -102,10 +83,12 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       id: this.currentMainCategoryDetails.value!.id,
       name: this.form.value.name
     };
-    return this.categoryService.updateMainCategory(updatedCategory.id, updatedCategory);
+    this.categoryService.updateMainCategory(updatedCategory.id, updatedCategory).pipe(
+      tap(() => this.form.markAsPristine())
+    ).subscribe();
   }
 
-  editSubcategory(subcategory: any) {
-
+  editSubcategory(subcategory: any): void {
+    console.log(subcategory);
   }
 }

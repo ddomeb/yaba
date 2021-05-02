@@ -6,6 +6,7 @@ import {catchError, finalize, shareReplay, switchMap, take, tap} from 'rxjs/oper
 import {SessionInfo, refreshTokenTokenIsExpired, accessTokenIsExpired} from '../common_models/sessioninfo.interface';
 import {AuthenticationResponse, UserData} from '../common_models/authentication.interface';
 import {ToastService} from '../common_components/toast-container/toast.service';
+import {Router} from '@angular/router';
 
 interface TokenInfo {
   exp: number;
@@ -27,7 +28,7 @@ const LOGOUT_URL = 'authentication/logout/';
 const REFRESH_URL = 'authentication/token/refresh/';
 const VERIFY_URL = 'authentication/token/verify/';
 const REGISTER_URL = 'register/';
-
+const PASSWORD_CHANGE_URL = 'authentication/password/change/';
 
 @Injectable({
   providedIn: 'root'
@@ -39,9 +40,11 @@ export class AuthenticationService {
   public userDataPublisher = new BehaviorSubject<UserData | null>(null);
   public loggedInPublisher = new BehaviorSubject<boolean>(this.isLoggedIn);
 
-  constructor(private client: HttpClient, private readonly toast: ToastService) {
-    console.log('auth service constructor');
-  }
+  constructor(
+    private readonly client: HttpClient,
+    private readonly toast: ToastService,
+    private readonly router: Router
+  ) {}
 
   public static getSessionInfo(): SessionInfo | null {
     const sessionData: string | null = localStorage.getItem(SESSION_INFO_KEY);
@@ -123,7 +126,7 @@ export class AuthenticationService {
 
   public sendRegistration(username: string, password: string, email: string): Observable<any> {
     return this.client.post(
-      'registration/',
+      this.baseUrl + REGISTER_URL,
       {username, password1: password, password2: password, email}
     );
   }
@@ -180,7 +183,8 @@ export class AuthenticationService {
     const session: SessionInfo | null = AuthenticationService.getSessionInfo();
     if (session === null) {
       this.clearSessionInfo();
-      // TODO: redirect
+      this.router.navigate(['about']);
+      this.userDataPublisher.next(null);
       return of(true);
     }
     return this.client.post(this.baseUrl + LOGOUT_URL, {refresh: session.refresh_token.token}).pipe(
@@ -188,6 +192,8 @@ export class AuthenticationService {
         () => {
           this.toast.showSuccess('Logged out, see you later!');
           this.clearSessionInfo();
+          this.userDataPublisher.next(null);
+          this.router.navigate(['about']);
         }
       ),
       catchError(() => {
@@ -195,6 +201,13 @@ export class AuthenticationService {
         return of(false);
       }),
       switchMap(() => of(true))
+    );
+  }
+
+  public changePassword(newPassword: string, oldPassword: string): Observable<any> {
+    return this.client.post(
+      this.baseUrl + PASSWORD_CHANGE_URL,
+      {new_password1: newPassword, new_password2: newPassword, old_password: oldPassword}
     );
   }
 

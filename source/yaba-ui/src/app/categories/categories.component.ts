@@ -1,5 +1,5 @@
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {CategoriesService} from './categories.service';
 import {BehaviorSubject, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
@@ -15,7 +15,7 @@ import {CategoryDetailsComponent} from './category-details/category-details.comp
   styleUrls: ['./categories.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CategoriesComponent implements OnInit {
+export class CategoriesComponent implements OnInit, OnDestroy {
   public mainCategories: BehaviorSubject<Array<MainCategory>>;
   public currentMainCategoryDetails: BehaviorSubject<MainCategoryDetails | null>;
 
@@ -31,13 +31,20 @@ export class CategoriesComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+    if (this.modalService.hasOpenModals()){
+      this.modalService.dismissAll('nok');
+    }
+  }
+
   public addNewCategory(): void {
-    const modalRef = this.modalService.open(NewCategoryComponent);
+    this.modalService.open(NewCategoryComponent);
   }
 
   public deleteMainCategory(id: number): void {
     const modalRef = this.modalService.open(SimpleConfirmModalComponent);
-    modalRef.componentInstance.message = 'Are you sure you want to delete this category and all its subcategories?';
+    modalRef.componentInstance.message = 'Are you sure you want to delete this category and all of its subcategories?\n'
+      + 'This will also revert all of the transactions associated with it.';
     modalRef.closed.pipe(
       switchMap(result => result === 'ok' ? this.categoriesService.deleteMainCategory((id)) : of(false))
     ).subscribe();
@@ -48,4 +55,5 @@ export class CategoriesComponent implements OnInit {
     modalRef.componentInstance.categoryId = category.id;
     // modalRef.componentInstance
   }
+
 }

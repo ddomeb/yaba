@@ -2,6 +2,9 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../services/authentication.service';
+import {tap} from 'rxjs/operators';
+import {ToastService} from '../common_components/toast-container/toast.service';
+import {BehaviorSubject} from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +14,13 @@ import {AuthenticationService} from '../services/authentication.service';
 })
 export class LoginComponent implements OnInit {
   form: FormGroup;
+  public showAuthFail = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly authService: AuthenticationService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly toast: ToastService
   ) {
 
     this.form = this.formBuilder.group({
@@ -25,17 +30,25 @@ export class LoginComponent implements OnInit {
   }
 
   login(): void {
-    const formData = this.form.value;
-    if (formData.username && formData.password) {
-      this.authService.login(formData.username, formData.password).subscribe(
-          () => this.router.navigateByUrl('/')
-        );
+    if (this.form.valid) {
+      this.authService.login(this.form.value.username, this.form.value.password).pipe(
+        tap(() => this.form.controls.password.setValue('')),
+        tap((result: boolean) => {
+          if (result) {
+            this.toast.showSuccess('Welcome back!');
+            this.router.navigate(['dashboard']);
+          }
+          else {
+            this.showAuthFail.next(true);
+          }
+        })
+      ).subscribe();
     }
   }
 
   ngOnInit(): void {
     if (this.authService.loggedInPublisher.value) {
-      this.router.navigateByUrl('dashboard');
+      this.router.navigate(['dashboard']);
     }
   }
 }

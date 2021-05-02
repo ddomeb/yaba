@@ -1,20 +1,20 @@
-<body class="text-center container-sm">
-  <main class="form-signin">
+<body class="text-center container-sm justify-content-center align-items-center display-f">
+  <main class="form-singin col-sm-3 mt-4">
     <form [formGroup]="form">
       <fieldset>
         <h1 class="h3 mb-3 fw-normal">Please Sign in</h1>
-        <div class="form-field">
+        <div class="form-field form-floating">
           <label for="username" class="visually-hidden">Username</label>
-          <input name="username" id="username" formControlName="username" class="form-control" placeholder="UserName" autofocus="">
+          <input name="username" id="username" formControlName="username" class="form-control mb-3" placeholder="UserName" autofocus="">
         </div>
-        <div class="form-field">
+        <div class="form-field form-floating">
           <label for="password" class="visually-hidden">Email address</label>
-          <input name="password" id="password" formControlName="password" class="form-control" type="password" placeholder="Password">
+          <input name="password" id="password" formControlName="password" class="form-control mb-3" type="password" placeholder="*****">
         </div>
       </fieldset>
-      <div class="form-buttons">
-        <button class="w-100 btn btn-lg btn-primary"
-                (click)="login()">Login</button>
+      <div class="form-buttons my-5">
+         <p *ngIf="showAuthFail | async" class="text-danger">Invalid email or password</p>
+        <button class="w-100 btn btn-lg btn-primary" (click)="login()">Login</button>
       </div>
     </form>
   </main>

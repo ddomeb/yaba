@@ -7,6 +7,7 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {TransactionsComponent} from './transactions/transactions.component';
 import {RegisterComponent} from './register/register.component';
 import {AboutComponent} from './about/about.component';
+import {PasswordChangeComponent} from './password-change/password-change.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent},
   { path: 'transactions', component: TransactionsComponent},
   { path: 'about', component: AboutComponent},
+  { path: 'changePassword', component: PasswordChangeComponent},
   // { path: '**', component:  PageNotFoundComponent}
 ];
 

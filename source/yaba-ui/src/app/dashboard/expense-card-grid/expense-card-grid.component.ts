@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {DashboardInterface, SeriesData} from '../dashboard.interface';
+import {SeriesData} from '../dashboard.interface';
 import {DashboardService} from '../dashboard.service';
 
 @Component({

@@ -121,6 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -138,8 +139,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(seconds=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': timedelta(weeks=2),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
 }
@@ -149,6 +150,8 @@ JWT_AUTH_COOKIE = 'yaba-auth-token'
 JWT_AUTH_REFRESH_COOKIE = 'yaba-refresh-token'
 
 ACCOUNT_EMAIL_VERIFICATION = None
+OLD_PASSWORD_FIELD_ENABLED = True
+LOGOUT_ON_PASSWORD_CHANGE = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
