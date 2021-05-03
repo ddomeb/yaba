@@ -8,7 +8,7 @@ class Account(models.Model):
         ('savings', 'Savings')
     )
 
-    name = models.CharField(max_length=250)
+    name = models.CharField(max_length=50)
     description = models.TextField(blank=True)
     balance = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True, editable=False)

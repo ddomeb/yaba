@@ -24,9 +24,11 @@ export class ExpensePiechartComponent implements OnInit {
   };
 
   public data: BehaviorSubject<DashboardInterface | null>;
+  public showPrevMonthData: BehaviorSubject<boolean>;
 
   constructor(private readonly dashService: DashboardService) {
     this.data = this.dashService.dashDataPublisher;
+    this.showPrevMonthData = this.dashService.showPrevMonthData;
   }
 
   nameFormatting(name: string): any { return name + ' (HUF)'; }

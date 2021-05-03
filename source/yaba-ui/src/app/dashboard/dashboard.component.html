@@ -2,7 +2,7 @@
   <div>
     <div id="monthly-stats" class="row card common-width">
       <div class="card-header text-center">
-        Monthly cash-flow stats
+        <h4>Monthly cash-flow stats</h4>
       </div>
       <div *ngIf="(dashDataPublisher | async) && (dashDataPublisher | async)!.monthlyStats" class="card-body">
         <div class="row">
@@ -71,16 +71,19 @@
     </div>
   </div>
   <div class="row card common-width">
-    <div class="card-header">
-      Monthly expenses by category
+    <div class="card-header text-center">
+      <h4 class="modal-title">Monthly expenses by category</h4>
+      <a type="button" (click)="showPrevMonthData.next(!showPrevMonthData.value)">
+        {{(showPrevMonthData | async) ? "This month >" : "< Previous month"}}
+      </a>
     </div>
     <div class="card-body">
       <app-expense-piechart></app-expense-piechart>
     </div>
   </div>
   <div class="row card common-width">
-    <div class="card-header">
-      Monthly expenses by subcategory
+    <div class="card-header text-center">
+      <h4>Monthly expenses by subcategory</h4>
     </div>
     <div class="card-body center" *ngIf="(subCatStatPublisher | async)">
       <app-expense-card-grid class="mx-auto"></app-expense-card-grid>

@@ -2,6 +2,7 @@ import datetime
 import typing
 from collections import defaultdict
 
+from django.contrib.auth.models import User
 from django.http import HttpResponse
 from pytz import timezone
 from django.db.models import QuerySet, DateTimeField, Sum
@@ -15,7 +16,7 @@ from accounts.models import Account
 from dashboard.models import AccountHistory, SeriesData, CashFlowStat, MonthlyStats
 from dashboard.serializers import AccountHistorySerializer, MonthlyStatSerializer
 from transactions.serializers import TransactionDetailsSerializer
-from yaba.common_utils import account_owned_by_requester
+from yaba.common_utils import account_owned_by_requester, get_this_month_date_range, get_prev_month_date_range
 
 
 @api_view()
@@ -34,18 +35,28 @@ def get_single_account_history(request: Request, account_pk: int) -> Response:
 @api_view()
 def get_monthly_expense_stats(request: Request) -> HttpResponse:
     base_query = request.user.transactions.all()
-    this_month_expense, this_month_income = get_this_months_expense_stats(base_query)
-    prev_month_expense, prev_month_income = get_prev_months_expense_stats(base_query)
-    this_month = CashFlowStat(this_month_income, this_month_expense)
-    prev_month = CashFlowStat(prev_month_income, prev_month_expense)
-    stat = MonthlyStats(this_month, prev_month)
-    serializer = MonthlyStatSerializer(stat)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    this_month_expense, this_month_income = \
+        get_transaction_summary_by_date_range(base_query, *get_this_month_date_range())
+    prev_month_expense, prev_month_income = \
+        get_transaction_summary_by_date_range(base_query, *get_prev_month_date_range())
+    return Response(
+        {
+            'thisMonth': {
+                'income': this_month_income,
+                'expense': this_month_expense
+            },
+            'prevMonth': {
+                'income': prev_month_income,
+                'expense': prev_month_expense,
+            }
+        },
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view()
 def get_most_recent_transactions(request: Request) -> Response:
-    count = request.GET.get('count', 10)
+    count = request.GET.get('count', '10')
     count = int(count) if count.isdecimal() else 10
     transactions = request.user.transactions.all()[:count]
     serializer = TransactionDetailsSerializer(transactions, many=True)
@@ -55,15 +66,31 @@ def get_most_recent_transactions(request: Request) -> Response:
 @api_view()
 def get_monthly_expense_stats_by_category(request: Request) -> Response:
     base_query = request.user.transactions.all()
-    grouped_by_category = generate_category_grouped_queryset(base_query)
-    return Response(grouped_by_category, status=status.HTTP_200_OK)
+    this_month_by_category = get_expenses_by_category(base_query, request.user, *get_this_month_date_range())
+    prev_month_by_category = get_expenses_by_category(base_query, request.user, *get_prev_month_date_range())
+    return Response(
+        {
+            'thisMonth': this_month_by_category,
+            'prevMonth': prev_month_by_category
+        },
+        status=status.HTTP_200_OK
+    )
 
 
 @api_view()
 def get_monthly_expense_stats_by_subcategory(request: Request, category_pk: int) -> Response:
     base_query = request.user.transactions.all()
-    grouped_by_subcategory = generate_subcategory_grouped_queryset(base_query, category_pk)
-    return Response(grouped_by_subcategory, status=status.HTTP_200_OK)
+    this_month_by_subcategory = \
+        get_expenses_by_subcategory(base_query, request.user, category_pk, *get_this_month_date_range())
+    prev_month_by_subcategory = \
+        get_expenses_by_subcategory(base_query, request.user, category_pk, *get_prev_month_date_range())
+    return Response(
+        {
+            'thisMonth': this_month_by_subcategory,
+            'prevMonth': prev_month_by_subcategory
+        },
+        status=status.HTTP_200_OK
+    )
 
 
 def get_start_date(end_date: datetime.datetime, timeline: str) -> typing.Optional[datetime.datetime]:
@@ -129,7 +156,11 @@ def get_timeline_param(request: Request) -> str:
     return request.GET.get('timedelta', 'month')
 
 
-def get_summaries_by_date_range(base_query: QuerySet, from_date: datetime.datetime, to_date: datetime.datetime):
+def get_transaction_summary_by_date_range(
+        base_query: QuerySet,
+        from_date: datetime.datetime,
+        to_date: datetime.datetime
+) -> (int, int):
     date_filtered_query = base_query.filter(created__range=(from_date, to_date))
     sum_expense = date_filtered_query.filter(amount__lt=0).aggregate(Sum('amount'))
     sum_income = date_filtered_query.filter(amount__gt=0).aggregate(Sum('amount'))
@@ -139,30 +170,21 @@ def get_summaries_by_date_range(base_query: QuerySet, from_date: datetime.dateti
     )
 
 
-def get_this_months_expense_stats(base_query: QuerySet):
-    bud_tz = timezone('Europe/Budapest')
-    to_date = datetime.datetime.now(bud_tz)
-    from_date = to_date.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    return get_summaries_by_date_range(base_query, from_date, to_date)
+def get_expenses_by_category(
+        base_query: QuerySet,
+        user: User,
+        from_date: datetime.datetime,
+        to_date: datetime.datetime
+) -> [dict]:
+    sum_dict = defaultdict(lambda: 0)
+    for category in user.main_categories.all():
+        sum_dict[(category.name, category.id)] = 0
 
-
-def get_prev_months_expense_stats(base_query: QuerySet):
-    bud_tz = timezone('Europe/Budapest')
-    to_date = \
-        datetime.datetime.now(bud_tz) \
-        .replace(day=1, hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(seconds=1)
-    from_date = to_date.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-    return get_summaries_by_date_range(base_query, from_date, to_date)
-
-
-def generate_category_grouped_queryset(base_query):
-    bud_tz = timezone('Europe/Budapest')
-    from_date = datetime.datetime.now(bud_tz).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     transactions = base_query \
-        .filter(created__gte=from_date, amount__lt=0) \
+        .filter(created__range=(from_date, to_date), amount__lt=0) \
         .select_related("subcategory__main_category") \
         .values('amount', 'subcategory__main_category__name', 'subcategory__main_category__id')
-    sum_dict = defaultdict(lambda: 0)
+
     for transaction in transactions:
         sum_dict[(transaction['subcategory__main_category__name'], transaction['subcategory__main_category__id'])] \
             -= transaction['amount']
@@ -170,14 +192,22 @@ def generate_category_grouped_queryset(base_query):
     return [{'name': item[0][0], 'value': item[1], 'extra': {'id': item[0][1]}} for item in sum_dict.items()]
 
 
-def generate_subcategory_grouped_queryset(base_query, category_pk):
-    bud_tz = timezone('Europe/Budapest')
-    from_date = datetime.datetime.now(bud_tz).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+def get_expenses_by_subcategory(
+        base_query: QuerySet,
+        user: User,
+        category_pk: int,
+        from_date: datetime.datetime,
+        to_date: datetime.datetime
+) -> [dict]:
+    sum_dict = defaultdict(lambda: 0)
+    for subcategory in user.subcategories.filter(main_category__id=category_pk):
+        sum_dict[(subcategory.name, subcategory.id)] = 0
+
     transactions = base_query \
-        .filter(created__gte=from_date, amount__lt=0, subcategory__main_category__id=category_pk) \
+        .filter(created__range=(from_date, to_date), amount__lt=0, subcategory__main_category__id=category_pk) \
         .select_related("subcategory") \
         .values('amount', 'subcategory__name', 'subcategory__id')
-    sum_dict = defaultdict(lambda: 0)
+
     for transaction in transactions:
         sum_dict[(transaction['subcategory__name'], transaction['subcategory__id'])] -= transaction['amount']
 

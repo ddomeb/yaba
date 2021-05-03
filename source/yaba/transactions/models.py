@@ -10,7 +10,7 @@ class Transaction(models.Model):
     class Meta:
         ordering = ('-created', )
 
-    note = models.TextField(blank=True)
+    note = models.TextField(blank=True, max_length=150)
     amount = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
     owner = models.ForeignKey(

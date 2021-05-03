@@ -1,85 +1,96 @@
-<form class="form-inline border-dark">
-  <div class="form-group">
-    <div class="input-group">
-      <select
-        [(ngModel)]="model.mainCategoryModel"
-        (ngModelChange)="onChangeCategory($event)"
-        [ngModelOptions]="{standalone: true}"
-        class="form-select"
-      >
-        <option value=""></option>
-        <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
-      </select>
-      <select
-        *ngIf="!(showDisabledSubCatSelect | async)"
-        [(ngModel)]="model.subcategoryModel"
-        [ngModelOptions]="{standalone: true}"
-        class="form-select"
-      >
-        <option value=""></option>
-        <ng-container *ngIf="(mainCategoryDetails | async) != null">
-          <option *ngFor="let cat of (mainCategoryDetails | async)!.subcategories" value="{{cat.id}}">{{cat.name}}</option>
-        </ng-container>
-      </select>
-      <select *ngIf="(showDisabledSubCatSelect | async)" class="form-select" disabled>
-      </select>
-    </div>
-    <div class="input-group">
-      <select
-        [(ngModel)]="model.accountModel"
-        [ngModelOptions]="{standalone: true}"
-        class="form-select"
-      >
-        <option value=""></option>
-        <option *ngFor="let acc of (accounts | async)" value="{{acc.id}}">{{acc.name}}</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <input class="form-control" placeholder="yyyy-mm-dd"
+<form class="border my-3 p-2">
+  <div class="form-row m-2">
+    <label for="main-category" class="col-form-label mr-1">Category:</label>
+    <select
+      [(ngModel)]="model.mainCategoryModel"
+      (ngModelChange)="onChangeCategory($event)"
+      [ngModelOptions]="{standalone: true}"
+      class="form-select col mr-1"
+      id="main-category"
+    >
+      <option value=""></option>
+      <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
+    </select>
+    <label for="subcategory"  *ngIf="!(showDisabledSubCatSelect | async)" class="col-form-label">Subcategory:</label>
+    <select
+      *ngIf="!(showDisabledSubCatSelect | async)"
+      [(ngModel)]="model.subcategoryModel"
+      [ngModelOptions]="{standalone: true}"
+      class="form-select col"
+      id="subcategory"
+    >
+      <option value=""></option>
+      <ng-container *ngIf="(mainCategoryDetails | async) != null">
+        <option *ngFor="let cat of (mainCategoryDetails | async)!.subcategories" value="{{cat.id}}">{{cat.name}}</option>
+      </ng-container>
+    </select>
+    <label *ngIf="(showDisabledSubCatSelect | async)" for="disabled-cat" class="col-form-label">Subcategory:</label>
+    <select *ngIf="(showDisabledSubCatSelect | async)" class="form-select col" id="disabled-cat" disabled>
+    </select>
+    <label for="account" class="col-form-label">Account:</label>
+    <select
+      [(ngModel)]="model.accountModel"
+      [ngModelOptions]="{standalone: true}"
+      class="form-select col"
+      id="account"
+    >
+      <option value=""></option>
+      <option *ngFor="let acc of (accounts | async)" value="{{acc.id}}">{{acc.name}}</option>
+    </select>
+  </div>
+  <div class="form-row mx-2 my-4">
+    <div class="input-group col mr-2">
+      <label for="from" class="col-form-label mr-2">From:</label>
+      <input class="form-control" placeholder="yyyy-mm-dd" id="from"
              name="dfrom" [(ngModel)]="model.dateFromModel" ngbDatepicker #dfrom="ngbDatepicker">
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="dfrom.toggle()" type="button"></button>
+        <button class="btn-sm btn-primary" (click)="dfrom.toggle()" type="button">
+          <i-bs name="calendar3" width="1em" height="1em"></i-bs>
+        </button>
       </div>
-      <input class="form-control" placeholder="yyyy-mm-dd"
+    </div>
+    <div class="input-group col mr-4">
+      <label for="to" class="col-form-label mr-2">To:</label>
+      <input class="form-control" placeholder="yyyy-mm-dd" id="to"
              name="dto" [(ngModel)]="model.dateToModel" ngbDatepicker #dto="ngbDatepicker">
       <div class="input-group-append">
-        <button class="btn btn-outline-secondary calendar" (click)="dto.toggle()" type="button"></button>
+        <button class="btn-sm btn-primary" (click)="dto.toggle()" type="button">
+          <i-bs name="calendar3" width="1em" height="1em"></i-bs>
+        </button>
       </div>
     </div>
-    <div class="form-group">
-      <input
-        type="radio"
-        class="btn-check"
-        id="income"
-        autocomplete="off"
-        name="dir"
-        [(ngModel)]="model.direction"
-        [ngModelOptions]="{standalone: true}"
-        value="in">
-      <label class="btn btn-outline-success" for="income">Income</label>
-      <input
-        type="radio"
-        class="btn-check"
-        id="expense"
-        name="dir"
-        autocomplete="off"
-        [(ngModel)]="model.direction"
-        [ngModelOptions]="{standalone: true}"
-        value="out">
-      <label class="btn btn-outline-secondary" for="expense">Expense</label>
-      <input
-        type="radio"
-        class="btn-check"
-        name="dir"
-        id="both"
-        autocomplete="off"
-        checked
-        [(ngModel)]="model.direction"
-        [ngModelOptions]="{standalone: true}"
-        value="">
-      <label class="btn btn-outline-primary" for="both">Both</label>
+    <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="model.direction" [ngModelOptions]="{standalone: true}">
+      <label ngbButtonLabel class="btn btn-sm btn-outline-success center" for="income">
+        <input
+          type="radio"
+          id="income"
+          autocomplete="off"
+          name="dir"
+          ngbButton
+          value="in"> Income
+      </label>
+      <label ngbButtonLabel class="btn btn-sm btn-outline-danger center" for="expense">
+        <input
+          type="radio"
+          id="expense"
+          autocomplete="off"
+          name="dir"
+          ngbButton
+          value="out"> Expense
+      </label>
+      <label ngbButtonLabel class="btn btn-sm btn-outline-secondary center" for="both">
+        <input
+          type="radio"
+          id="both"
+          autocomplete="off"
+          name="dir"
+          ngbButton
+          value=""> Both
+      </label>
     </div>
   </div>
-  <button class="btn btn-primary" (click)="onSubmitParams()" type="submit">Apply</button>
-  <button class="btn btn-secondary" (click)="onResetParams()" type="submit">Reset</button>
+  <div class="center mt-1">
+    <button class="btn btn-primary mr-2" (click)="onSubmitParams()" type="submit">Apply</button>
+    <button class="btn btn-secondary ml-2" (click)="onResetParams()" type="submit">Reset</button>
+  </div>
 </form>

@@ -1,40 +1,60 @@
 <div class="modal-header">
-  <h4 class="modal-title">Add new transaction</h4>
+  <h4 class="modal-title">Add new transaction ({{isIncome ? 'income' : 'expense'}})</h4>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 <div class="modal-body container">
-  <form class="form-group" [formGroup]="form">
-    <div class="input-group">
-      <select class="form-select" formControlName="accountId" >
-        <option value=""></option>
-        <option *ngFor="let acc of (accounts | async)" value="{{acc.id}}">{{acc.name}}</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <select class="form-select" formControlName="mainCategoryId" >
-        <option value=""></option>
-        <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
-      </select>
-    </div>
-    <div class="input-group">
-      <select class="form-select" formControlName="subCategoryId" >
-        <option value=""></option>
-        <ng-container *ngIf="!(showDisabledSubCatSelect | async)">
-          <option *ngFor="let cat of (mainCategoryDetails | async)!.subcategories" value="{{cat.id}}">{{cat.name}}</option>
-        </ng-container>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="notetextarea">Note</label>
-      <textarea formControlName="note" class="form-control" id="notetextarea" rows="3"></textarea>
-    </div>
-    <div class="form-group row">
-      <label for="amount" class="col-2 col-form-label">Amount</label>
-      <div class="col-10">
-        <input formControlName="amount" class="form-control" type="number" min="0" value="0" id="amount">
+  <form [formGroup]="form">
+      <div class="form-group row mb-3 mr-5">
+        <label for="acc" class="col-2 col-form-label mr-2">Account:</label>
+        <select class="form-select col" formControlName="accountId" id="acc">
+          <option value=""></option>
+          <option *ngFor="let acc of (accounts | async)" value="{{acc.id}}">{{acc.name}}</option>
+        </select>
       </div>
-    </div>
+      <div class="form-group row mb-3 mr-5">
+        <label for="main-cat" class="col-2 col-form-label mr-2">Category:</label>
+        <select class="form-select col" formControlName="mainCategoryId" id="main-cat">
+          <option value=""></option>
+          <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
+        </select>
+        <small
+          *ngIf="(mainCategoryDetails | async ) && ((mainCategoryDetails | async)!.subcategories!.length === 0)"
+          class="text-danger ml-xl-5"
+        >
+          This category has no subcategories. Please select another subcategory or add subcategories to this category.
+        </small>
+      </div>
+      <div class="form-group row mb-3 mr-5">
+        <label for="sub-cat" class="col-2 col-form-label mr-2">Subcategory:</label>
+        <select class="form-select col" formControlName="subCategoryId" id="sub-cat">
+          <option value=""></option>
+          <ng-container *ngIf="!(showDisabledSubCatSelect | async)">
+            <option *ngFor="let cat of (mainCategoryDetails | async)!.subcategories" value="{{cat.id}}">{{cat.name}}</option>
+          </ng-container>
+        </select>
+      </div>
+      <div class="form-group row mb-3">
+        <label for="amount" class="col-2 col-form-label">Amount: </label>
+        <div class="input-group col-sm-3 pl-0">
+<!--          <div class="input-group-prepend">-->
+<!--            <div class="input-group-text text-center">{{isIncome ? '+' : '-'}}</div>-->
+<!--          </div>-->
+          <input formControlName="amount" class="form-control" type="number" min="0" value="0" id="amount">
+          <div class="input-group-append">
+            <div class="input-group-text text-center">HUF</div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group mb-3 mr-5">
+        <label for="note-textarea" class="col-form-label">Note:</label>
+        <textarea formControlName="note" class="form-control col-sm" id="note-textarea" rows="2"></textarea>
+        <small class="text-muted">Optional. Maximum 150 characters.</small>
+      </div>
   </form>
-  <div class="container">
-    <button type="submit" class="btn btn-primary" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
+  <div class="modal-footer mr-4">
+    <button type="submit" class="btn btn-primary mr-1" [disabled]="!form.valid" (click)="onSubmit()">Submit</button>
+    <button class="btn btn-secondary ml-1" (click)="activeModal.dismiss('canceled')">Cancel</button>
   </div>
 </div>

@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, Output, EventEmitter, ChangeDetectionStrategy} from '@angular/core';
 import {TransactionService} from '../transaction.service.';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, concat} from 'rxjs';
 import {MainCategory, MainCategoryDetails} from '../../common_models/category.interface';
 import {AccountInfo} from '../../common_models/account.interface';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
@@ -31,14 +31,16 @@ export class NewTransactionComponent implements OnInit {
     this.mainCategories = this.transactionService.mainCategoriesPublisher;
     this.accounts = this.transactionService.accountsPublisher;
     this.mainCategoryDetails = this.transactionService.currentMainCategoryPublisher;
-    this.transactionService.loadAccounts().subscribe();
-    this.transactionService.loadMainCategories().subscribe();
+    concat(
+      this.transactionService.loadAccounts(),
+      this.transactionService.loadMainCategories()
+    ).subscribe();
 
     this.form = new FormGroup({
       accountId: new FormControl('', Validators.required),
       mainCategoryId: new FormControl('', Validators.required),
       subCategoryId: new FormControl('', Validators.required),
-      note: new FormControl('', Validators.required),
+      note: new FormControl('', Validators.maxLength(150)),
       amount: new FormControl('1000',
         Validators.compose(
           [
@@ -50,7 +52,6 @@ export class NewTransactionComponent implements OnInit {
     });
 
     this.form.get('subCategoryId')?.disable();
-
     this.form.get('mainCategoryId')?.valueChanges.pipe(
       tap(val => this.onMainCategoryChanged(val))
     ).subscribe();
@@ -88,7 +89,7 @@ export class NewTransactionComponent implements OnInit {
       id: 0
     };
     this.transactionService.addTransaction(tr).pipe(
-      tap(() => this.activeModal.dismiss('ok'))
+      tap(() => this.activeModal.close('ok'))
     ).subscribe();
   }
 

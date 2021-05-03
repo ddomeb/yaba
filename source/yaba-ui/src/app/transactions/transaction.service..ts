@@ -16,9 +16,6 @@ export class TransactionService {
   private static readonly CATEGORIES_ENDPOINT = 'categories/';
   private static readonly ACCOUNTS_ENDPOINT = 'accounts/';
 
-  // private transactions: Array<PaginatedTransactionList> | Array<TransactionDetails> = [];
-  // public transactionsPublisher: BehaviorSubject<Array<PaginatedTransactionList> | Array<TransactionDetails>> =
-  //   new BehaviorSubject<Array<PaginatedTransactionList> | Array<TransactionDetails>>(this.transactions);
   private transactions: PaginatedTransactionList | null = null;
   private mainCategories: MainCategory[] = [];
   private accounts: AccountInfo[] = [];
@@ -39,7 +36,6 @@ export class TransactionService {
     subcategory?: string,
     direction?: 'in' | 'out',
   ): Observable<PaginatedTransactionList> {
-  // ): Observable<Array<PaginatedTransactionList> | Array<TransactionDetails>> {
     let params = new HttpParams();
     params = datefrom ? params.set('datefrom', datefrom.toISOString()) : params;
     params = dateto ? params.set('dateto', dateto.toISOString()) : params;
@@ -48,14 +44,6 @@ export class TransactionService {
     params = subcategory ? params.set('subcategory', subcategory) : params;
     params = direction ? params.set('direction', direction) : params;
 
-    // const response: Observable<Array<PaginatedTransactionList> | Array<TransactionDetails>>
-    //   = page ? this.queryTransactionsWithPagination(params, page) : this.queryTransactionDetails(params);
-    // return response.pipe(
-    //   tap((results: Array<PaginatedTransactionList> | Array<TransactionDetails>) => {
-    //     this.transactions = results;
-    //     this.transactionsPublisher.next(this.transactions);
-    //   })
-    // );
     page = page ? page : 1;
     return  this.queryTransactionsWithPagination(params, page).pipe(
       tap((results: PaginatedTransactionList) => {

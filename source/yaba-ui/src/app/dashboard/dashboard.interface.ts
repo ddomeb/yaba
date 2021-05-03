@@ -14,7 +14,7 @@ export interface DashboardInterface {
     };
   };
   lastTransactions?: TransactionDetails[];
-  expenseByMainCategory?: SeriesData[];
+  expenseByMainCategory?: GroupedStats;
   // expenseOfCurrentCategory?: SeriesData[];
 }
 
@@ -35,4 +35,7 @@ export interface SeriesData {
   extra?: any;
 }
 
-
+export interface GroupedStats {
+  thisMonth: SeriesData[];
+  prevMonth: SeriesData[];
+}

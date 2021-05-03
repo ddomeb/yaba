@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {ApiService} from '../services/apiservice.service';
-import {DashboardInterface, SeriesData, StatsResponse} from './dashboard.interface';
+import {DashboardInterface, GroupedStats, SeriesData, StatsResponse} from './dashboard.interface';
 import {tap} from 'rxjs/operators';
 import {TransactionDetails} from '../common_models/transaction.interface';
 import {BehaviorSubject, concat, Observable} from 'rxjs';
@@ -18,6 +18,7 @@ export class DashboardService {
   private dashData: DashboardInterface = {};
   public dashDataPublisher = new BehaviorSubject<DashboardInterface | null>(null);
   public subCatStatPublisher = new BehaviorSubject<SeriesData[] | null>(null);
+  public showPrevMonthData = new BehaviorSubject<boolean>(false);
 
   constructor(private readonly apiService: ApiService) {
     this.loadData();
@@ -34,8 +35,9 @@ export class DashboardService {
   }
 
   public loadSubCategoryStats(id: number): void {
-    this.apiService.get<SeriesData[]>(DashboardService.EXPENSE_STATS_URL + id.toString() + '/').pipe(
-      tap((response: SeriesData[]) => this.subCatStatPublisher.next(response))
+    this.apiService.get<GroupedStats>(DashboardService.EXPENSE_STATS_URL + id.toString() + '/').pipe(
+      tap((response: GroupedStats) =>
+        this.subCatStatPublisher.next(this.showPrevMonthData.value ? response.prevMonth : response.thisMonth))
     ).subscribe();
   }
 
@@ -61,9 +63,9 @@ export class DashboardService {
     );
   }
 
-  private loadExpenseStats(): Observable<SeriesData[]> {
-    return this.apiService.get<SeriesData[]>(DashboardService.EXPENSE_STATS_URL).pipe(
-      tap((response: SeriesData[]) => this.dashData.expenseByMainCategory = response)
+  private loadExpenseStats(): Observable<GroupedStats> {
+    return this.apiService.get<GroupedStats>(DashboardService.EXPENSE_STATS_URL).pipe(
+      tap((response: GroupedStats) => this.dashData.expenseByMainCategory = response)
     );
   }
 }

@@ -85,7 +85,7 @@ export class TransactionFilterComponent implements OnInit {
       accountModel: null,
       mainCategoryModel: null,
       subcategoryModel: null,
-      direction: null,
+      direction: '',
     };
     this.onSubmitParams();
   }

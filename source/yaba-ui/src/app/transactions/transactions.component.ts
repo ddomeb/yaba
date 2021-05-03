@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {TransactionService} from './transaction.service.';
 import {PaginatedTransactionList} from '../common_models/transaction.interface';
 import {BehaviorSubject, concat, of} from 'rxjs';
@@ -14,7 +14,7 @@ import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-m
   styleUrls: ['./transactions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TransactionsComponent implements OnInit {
+export class TransactionsComponent implements OnInit, OnDestroy {
   public transactionPublisher: BehaviorSubject<PaginatedTransactionList | null>;
   public currentPage = 1;
   public showPaginationLinks: {next: boolean, previous: boolean} = {next: false, previous: false};
@@ -111,13 +111,19 @@ export class TransactionsComponent implements OnInit {
   public addNewTransaction(dir: 'income' | 'expense'): void {
     const modalref = this.modalService.open(NewTransactionComponent, {size: 'lg'});
     modalref.componentInstance.isIncome = dir === 'income';
-    modalref.dismissed.pipe(
+    modalref.closed.pipe(
       tap((response: string) => {
         if (response === 'ok') {
           this.changePage(0);
         }
       })
     ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.modalService.hasOpenModals()) {
+      this.modalService.dismissAll();
+    }
   }
 
 }

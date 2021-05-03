@@ -21,6 +21,10 @@ export class ExpenseCardGridComponent implements OnInit {
     this.data = this.dashService.subCatStatPublisher;
   }
 
+  valueFormatting(n: SeriesData): string {
+    return n.value.toString() + ' HUF';
+  }
+
   ngOnInit(): void {
   }
 

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {DashboardInterface, SeriesData} from './dashboard.interface';
+import {DashboardInterface, GroupedStats, SeriesData} from './dashboard.interface';
 import {BehaviorSubject} from 'rxjs';
 import {DashboardService} from './dashboard.service';
 
@@ -12,10 +12,12 @@ import {DashboardService} from './dashboard.service';
 export class DashboardComponent implements OnInit {
   public dashDataPublisher: BehaviorSubject<DashboardInterface | null>;
   public subCatStatPublisher: BehaviorSubject<SeriesData[] | null>;
+  public showPrevMonthData: BehaviorSubject<boolean>;
 
   constructor(private readonly dashService: DashboardService) {
     this.dashDataPublisher = this.dashService.dashDataPublisher;
     this.subCatStatPublisher = this.dashService.subCatStatPublisher;
+    this.showPrevMonthData = this.dashService.showPrevMonthData;
   }
 
   ngOnInit(): void {
