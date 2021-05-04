@@ -1,30 +1,51 @@
 <div class="container">
-  <ngb-accordion [closeOthers]="true">
-    <ngb-panel *ngFor="let acc of (accountsPublisher | async)" id="acc-{{acc.id}}" title="{{acc.name}}">
-      <ng-template ngbPanelContent>
-        <div class="row mb-3">
-          <div class="col-md-4 themed-grid-col">Balance</div>
-          <div class="col-md-8 themed-grid-col">{{acc.balance}} €</div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-4 themed-grid-col">Created</div>
-          <div class="col-md-8 themed-grid-col">{{acc.created | date: 'longDate'}} </div>
-        </div>
-        <div class="row mb-3">
-          <div class="col-md-4 themed-grid-col">Description</div>
-          <div class="col-md-8 themed-grid-col">{{acc.description}} </div>
-        </div>
-        <div class="row mb-3">
-          <a class="btn btn-outline-primary" (click)="startEditing(acc.id)">Edit</a>
-          <a class="btn btn-outline-primary" (click)="deleteAccount(acc.id)">Delete</a>
-          <a class="btn btn-outline-primary" (click)="showTransactions(acc)">Transactions</a>
-          <a class="btn btn-outline-primary" (click)="showAccountHistory(acc.id)">History</a>
-        </div>
-      </ng-template>
-    </ngb-panel>
-  </ngb-accordion>
-  <div class="mb-3">
-    <a class="btn btn-outline-primary" (click)="newAccount()">Add new</a>
-  </div>
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h3 class="jumbotron-heading">Accounts</h3>
+      <p>
+        <a (click)="newAccount()" class="btn btn-primary my-2">add new</a>
+      </p>
+    </div>
+  </section>
+  <main class="py-1 bg-light mb-2" style="min-height: 1000px">
+    <ngb-accordion [closeOthers]="true">
+      <ngb-panel *ngFor="let acc of (accountsPublisher | async)" id="acc-{{acc.id}}">
+        <ng-template ngbPanelHeader let-opened="opened">
+          <div class="d-flex align-items-center justify-content-between">
+            <button ngbPanelToggle class="btn btn-link text-left pl-0 font-weight-bold center" >{{acc.name}}</button>
+            <button
+              ngbPanelToggle
+              class="btn btn-link p-0"
+              [ngClass]="{'text-success': acc.balance > 0, 'text-danger': acc.balance <= 0}"
+            >
+              Current balance: {{acc.balance}} HUF
+            </button>
+          </div>
+        </ng-template>y
+        <ng-template ngbPanelContent>
+          <div class="row mb-3">
+            <div class="col-md-4 themed-grid-col font-weight-bold">Balance:</div>
+            <div class="col-md-8 themed-grid-col font-weight-bold" [ngClass]="{'text-success': acc.balance > 0, 'text-danger': acc.balance <= 0}">
+              {{acc.balance}} HUF
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4 themed-grid-col font-weight-bold">Created:</div>
+            <div class="col-md-8 themed-grid-col">{{acc.created | date: 'longDate'}} </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4 themed-grid-col font-weight-bold">Description:</div>
+            <div class="col-md-8 themed-grid-col">{{acc.description}} </div>
+          </div>
+          <div class="row mb-3 justify-content-end">
+            <a class="btn btn-outline-primary mt-2 mx-1" (click)="showTransactions(acc)">Transactions</a>
+            <a class="btn btn-outline-primary mt-2 mx-1" (click)="showAccountHistory(acc.id)">History</a>
+            <a class="btn btn-primary mt-2 mx-1" (click)="startEditing(acc.id)">Edit</a>
+            <a class="btn btn-danger mt-2 mx-1" (click)="deleteAccount(acc.id)">Delete</a>
+          </div>
+        </ng-template>
+      </ngb-panel>
+    </ngb-accordion>
+  </main>
 </div>
 

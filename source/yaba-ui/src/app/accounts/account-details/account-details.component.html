@@ -1,45 +1,41 @@
+<link rel="stylesheet" href="../accounts.component.scss">
 <div class="modal-header">
   <h4 class="modal-title">Account information</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+  <button type="button" class="close" aria-label="Close" (click)="cancelEdit()">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body container">
-  <div>
-    <form (ngSubmit)="onSubmit()" #accountForm="ngForm">
-      <div class="form-group">
-        <label for="name">Name</label>
-        <input type="text" class="form-control" id="name"
-               required
-               [(ngModel)]="account.name" name="name"
-               #name="ngModel">
-        <div [hidden]="name.valid || name.pristine"
-             class="alert alert-danger">
-          Name is required
+  <form [formGroup]="form">
+    <div class="form-group">
+      <label for="name" class="">Name:</label>
+      <input  type="text" formControlName="name" class="form-control" id="name">
+      <small class="text-muted">Required. The name of the account. Max 50 characters.</small>
+    </div>
+    <div class="form-group">
+      <label for="bal" class="">Balance:</label>
+      <div class="input-group">
+        <input type="number" formControlName="balance" class="form-control" id="bal">
+        <div class="input-group-append">
+          <div class="input-group-text text-center">HUF</div>
         </div>
       </div>
-
-      <div class="form-group">
-        <label for="balance">Balance</label>
-        <input type="number" class="form-control" id="balance"
-               [(ngModel)]="account.balance" name="balance">
-      </div>
-
-      <div class="form-group">
-        <label for="type">Account type</label>
-        <select class="form-control" id="type"
-                required
-                [(ngModel)]="account.type" name="type"
-                #type="ngModel">
-          <option *ngFor="let t of ACCOUNT_TYPES" [value]="t">{{t}}</option>
-        </select>
-        <div [hidden]="type.valid || type.pristine" class="alert alert-danger">
-          Type is required
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-success" [disabled]="!accountForm.form.valid">Submit</button>
-      </div>
-    </form>
+      <small class="text-muted">Required. The current balance of the account.</small>
+    </div>
+    <div class="form-group row">
+      <label for="type" class="mx-3 my-1">Type:</label>
+      <select class="form-select col mr-3" formControlName="type" id="type">
+        <option *ngFor="let t of ACCOUNT_TYPES" value="{{t}}">{{t}}</option>
+      </select>
+    </div>
+    <div class="form-group mb-3 mr-0">
+      <label for="description" class="col-form-label">Description:</label>
+      <textarea formControlName="description" class="form-control col-sm" id="description" rows="6"></textarea>
+      <small class="text-muted">Required. Maximum 250 characters.</small>
+    </div>
+  </form>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-success" (click)="onSubmit()" [disabled]="!form.valid">Submit</button>
+    <button type="button" class="btn btn-secondary" (click)="cancelEdit()">Cancel</button>
   </div>
 </div>

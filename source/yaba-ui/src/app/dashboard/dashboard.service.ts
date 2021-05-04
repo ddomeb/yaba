@@ -16,6 +16,7 @@ export class DashboardService {
   public static EXPENSE_STATS_URL = DashboardService.DASHBOARD_URL + 'expense_stats/';
 
   private dashData: DashboardInterface = {};
+  private subCategoryStats: GroupedStats | null = null;
   public dashDataPublisher = new BehaviorSubject<DashboardInterface | null>(null);
   public subCatStatPublisher = new BehaviorSubject<SeriesData[] | null>(null);
   public showPrevMonthData = new BehaviorSubject<boolean>(false);
@@ -37,8 +38,18 @@ export class DashboardService {
   public loadSubCategoryStats(id: number): void {
     this.apiService.get<GroupedStats>(DashboardService.EXPENSE_STATS_URL + id.toString() + '/').pipe(
       tap((response: GroupedStats) =>
-        this.subCatStatPublisher.next(this.showPrevMonthData.value ? response.prevMonth : response.thisMonth))
+        this.subCatStatPublisher.next(this.showPrevMonthData.value ? response.prevMonth : response.thisMonth)
+      ),
+      tap((response: GroupedStats) => this.subCategoryStats = response)
     ).subscribe();
+  }
+
+  public changeStatsMonth(): void {
+    this.showPrevMonthData.next(!this.showPrevMonthData.value);
+    if (this.subCategoryStats === null) { return; }
+    this.subCatStatPublisher.next(
+      this.showPrevMonthData.value ? this.subCategoryStats.prevMonth : this.subCategoryStats.thisMonth
+    );
   }
 
   private loadMonthlyStats(): Observable<StatsResponse> {
@@ -68,4 +79,5 @@ export class DashboardService {
       tap((response: GroupedStats) => this.dashData.expenseByMainCategory = response)
     );
   }
+
 }

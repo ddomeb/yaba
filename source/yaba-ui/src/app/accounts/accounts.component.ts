@@ -48,22 +48,19 @@ export class AccountsComponent implements OnInit {
     }
     const modalRef = this.modalService.open(AccountDetailsComponent);
     modalRef.componentInstance.account = JSON.parse(JSON.stringify(account));
-    modalRef.closed.pipe(
-      switchMap(  (result: AccountInfo) => this.accountsService.modifyAccount(result))
-    ).subscribe();
+    modalRef.componentInstance.isEdit = true;
+    // modalRef.componentInstance.setInfo();
   }
 
   public newAccount(): void {
     const modalRef = this.modalService.open(AccountDetailsComponent);
-    modalRef.componentInstance.account = JSON.parse(JSON.stringify(newAccount));
-    modalRef.closed.pipe(
-      switchMap( (result: AccountInfo) => this.accountsService.addAccount(result)),
-    ).subscribe();
+    modalRef.componentInstance.isEdit = false;
   }
 
   public deleteAccount(id: number): void {
     const modalRef = this.modalService.open(SimpleConfirmModalComponent);
-    modalRef.componentInstance.message = 'Are you sure you want to delete this account?';
+    modalRef.componentInstance.message = 'Are you sure you want to delete this account?'
+      + '\nThis will also delete all transactions associated with it.';
     modalRef.closed.pipe(
       switchMap((result: string) => result === 'ok' ? this.accountsService.deleteAccount(id) : of(result))
     ).subscribe();

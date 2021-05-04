@@ -9,7 +9,7 @@ class Account(models.Model):
     )
 
     name = models.CharField(max_length=50)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True, max_length=250)
     balance = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
     type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES, default='account')

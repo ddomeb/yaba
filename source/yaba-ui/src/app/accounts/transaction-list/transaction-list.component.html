@@ -19,27 +19,23 @@
   <!--    <th scope="row">{{ i + 1 }}</th>-->
       <td>{{ transaction.created | date:'short' }}</td>
       <td>{{ transaction.amount | number }}</td>
-      <td>{{ transaction.subcategory.name }}</td>
+      <td style="max-width: 155px; overflow-wrap: break-word;">{{ transaction.subcategory.name }}</td>
       <td>
         <button type="button" class="btn btn-outline-secondary mr-2" placement="right"
                 ngbPopover="{{transaction.note}}" popoverTitle="Note">
-          Note
+          Show note
         </button>
       </td>
     </tr>
     </tbody>
   </table>
-  <h3 *ngIf="(currentPagePublisher | async)!.count === 0">
+  <h4 *ngIf="(currentPagePublisher | async)!.count === 0" class="center">
     No transaction for this account yet.
-  </h3>
+  </h4>
   <div>
-    <ul class="pagination">
-      <li class="page-item" *ngIf="(showPaginationLinks | async)!.prev">
-        <button class="page-link" (click)="changePage(-1)">Previous</button>
-      </li>
-      <li class="page-item" *ngIf="(showPaginationLinks | async)!.next">
-        <button class="page-link" (click)="changePage(+1)">Next</button>
-      </li>
-    </ul>
+    <div class="btn-group pagination mx-5" role="group">
+        <button class="btn btn-secondary" [disabled]="! (showPaginationLinks | async)!.prev" (click)="changePage(-1)">< Previous</button>
+        <button class="btn btn-secondary" [disabled]="!(showPaginationLinks | async)!.next" (click)="changePage(+1)">Next ></button>
+    </div>
   </div>
 </div>
