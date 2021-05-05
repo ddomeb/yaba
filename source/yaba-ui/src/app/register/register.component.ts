@@ -18,6 +18,7 @@ import {ToastService} from '../common_components/toast-container/toast.service';
 export class RegisterComponent implements OnInit {
   public form: FormGroup;
   public showBackendErrors = new BehaviorSubject<boolean>(false);
+  public showPasswordToggle = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly registerService: RegisterService,
@@ -82,7 +83,7 @@ export class RegisterComponent implements OnInit {
       if (psw1 !== '' && psw1 !== psw2) {
         // tslint:disable-next-line:no-non-null-assertion
         frm.get(field2)!.setErrors({ notMatch: 'passwords does not match' });
-        return { notMatch: 'passwords does not match' };
+        return { notMatch: 'Passwords do not match.' };
       }
       return null;
     };
@@ -110,6 +111,7 @@ export class RegisterComponent implements OnInit {
     }
     const response = result as AuthenticationResponse;
     AuthenticationService.setSession(response);
+    this.authService.userDataPublisher.next(response.user);
     this.authService.loggedInPublisher.next(true);
     this.toast.showSuccess('Registration successful, Welcome!');
     this.router.navigate(['about']);

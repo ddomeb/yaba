@@ -31,12 +31,7 @@ export class AccountDetailsComponent implements OnInit {
           Validators.maxLength(50)
         ]
       )),
-      description: new FormControl('', Validators.compose(
-        [
-          Validators.required,
-          Validators.maxLength(250)
-        ]
-      )),
+      description: new FormControl('', Validators.maxLength(250)),
       balance: new FormControl('', Validators.required),
       type: new FormControl('', Validators.required)
     });

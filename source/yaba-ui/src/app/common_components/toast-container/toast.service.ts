@@ -9,11 +9,11 @@ export class ToastService {
   }
 
   showSuccess(msg: string): void {
-    this.show(msg, { classname: 'bg-success text-light', delay: 1000 });
+    this.show(msg, { classname: 'bg-success text-light', delay: 3000 });
   }
 
   showDanger(msg: string): void {
-    this.show(msg, { classname: 'bg-danger text-light', delay: 1500 });
+    this.show(msg, { classname: 'bg-danger text-light', delay: 4000 });
   }
 
   show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {

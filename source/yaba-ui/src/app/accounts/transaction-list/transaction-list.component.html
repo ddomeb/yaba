@@ -21,8 +21,14 @@
       <td>{{ transaction.amount | number }}</td>
       <td style="max-width: 155px; overflow-wrap: break-word;">{{ transaction.subcategory.name }}</td>
       <td>
-        <button type="button" class="btn btn-outline-secondary mr-2" placement="right"
-                ngbPopover="{{transaction.note}}" popoverTitle="Note">
+        <button
+          type="button"
+          class="btn btn-outline-secondary mr-2"
+          placement="right"
+          ngbPopover="{{transaction.note}}"
+          popoverTitle="Note"
+          *ngIf="transaction.note"
+        >
           Show note
         </button>
       </td>

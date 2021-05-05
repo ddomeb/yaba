@@ -56,4 +56,4 @@ class AccountView(viewsets.ViewSet):
         queryset = request.user.accounts.all()
         account = get_object_or_404(queryset, pk=pk)
         account.delete()
-        return Response(data=dict(), status=status.HTTP_200_OK)
+        return Response(data={}, status=status.HTTP_200_OK)

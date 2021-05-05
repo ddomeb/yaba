@@ -1,20 +1,39 @@
-<body class="text-center container-sm justify-content-center align-items-center display-f">
-  <main class="form-singin col-sm-3 mt-4">
+<body class="text-center container-md justify-content-center align-items-center display-f">
+  <main class="form-singin col-sm-4 mt-4">
     <form [formGroup]="form">
       <fieldset>
         <h1 class="h3 mb-3 fw-normal">Please Sign in</h1>
         <div class="form-field form-floating">
           <label for="username" class="visually-hidden">Username</label>
-          <input name="username" id="username" formControlName="username" class="form-control mb-3" placeholder="UserName" autofocus="">
+          <input name="username" id="username" formControlName="username" class="form-control mb-3" autofocus="">
         </div>
         <div class="form-field form-floating">
-          <label for="password" class="visually-hidden">Email address</label>
-          <input name="password" id="password" formControlName="password" class="form-control mb-3" type="password" placeholder="*****">
+          <label for="password" class="visually-hidden">Password</label>
+          <div class="input-group">
+            <input
+              name="password"
+              id="password"
+              formControlName="password"
+              class="form-control mb-3"
+              [type]="(showPasswordToggle | async) ? 'text' : 'password'"
+            >
+            <div>
+              <div class="input-group-append">
+                <button class="input-group-text" (click)="showPasswordToggle.next(!showPasswordToggle.value)">
+                  <i-bs
+                    [name]="(showPasswordToggle | async) ? 'eye-slash-fill' : 'eye-fill'"
+                    width="1rem"
+                    height="1rem">
+                  </i-bs>
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </fieldset>
-      <div class="form-buttons my-5">
-         <p *ngIf="showAuthFail | async" class="text-danger">Invalid email or password</p>
-        <button class="w-100 btn btn-lg btn-primary" (click)="login()">Login</button>
+      <div class="form-buttons my-5 mx-5">
+         <p *ngIf="showAuthFail | async" class="text-danger">Invalid username or password</p>
+        <button class="w-100 btn btn-lg btn-primary" [disabled]="!form.valid" (click)="login()">Login</button>
       </div>
     </form>
   </main>

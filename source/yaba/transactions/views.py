@@ -1,3 +1,4 @@
+import typing
 from math import ceil
 
 import pytz
@@ -17,7 +18,7 @@ from transactions.serializers import TransactionDetailsSerializer, TransactionSe
 PAGE_LENGTH = 15
 
 
-def process_transaction(transaction: dict, user: User):
+def process_transaction(transaction: typing.Dict, user: User):
     account: Account = user.accounts.get(pk=transaction["account"].id)
     account.balance += transaction["amount"]
     account.save()
@@ -132,4 +133,4 @@ class TransactionView(viewsets.ViewSet):
         transaction = get_object_or_404(queryset, pk=pk)
         revert_transaction(transaction.amount, transaction.account)
         transaction.delete()
-        return Response(data=dict(), status=status.HTTP_200_OK)
+        return Response(data={}, status=status.HTTP_200_OK)

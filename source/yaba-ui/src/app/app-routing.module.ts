@@ -17,6 +17,7 @@ const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent},
   { path: 'transactions', component: TransactionsComponent},
   { path: 'about', component: AboutComponent},
+  { path: '', redirectTo: 'about', pathMatch: 'full'},
   { path: 'changePassword', component: PasswordChangeComponent},
   // { path: '**', component:  PageNotFoundComponent}
 ];

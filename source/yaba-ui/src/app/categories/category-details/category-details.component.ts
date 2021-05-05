@@ -27,8 +27,13 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
   ) {
     this.currentMainCategoryDetails = this.categoryService.currentMainCategoryPublisher;
     this.form = new FormGroup({
-        name: new FormControl('', Validators.required),
-        description: new FormControl('', Validators.required)
+        name: new FormControl('', Validators.compose(
+          [
+            Validators.required,
+            Validators.maxLength(50)
+          ]
+        )),
+        description: new FormControl('', Validators.maxLength(100))
       }
     );
   }

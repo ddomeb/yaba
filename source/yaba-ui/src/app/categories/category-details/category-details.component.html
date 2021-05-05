@@ -17,7 +17,7 @@
           Name is required. Maximum characters: 50.
         </small>
         <small [hidden]="!this.form.get('name')!.valid" class="text-muted row ml-4">
-          Click to edit.
+          Click to edit. Maximum characters: 50.
         </small>
       </div>
     </div>
@@ -38,14 +38,13 @@
             class="form-control"
             id="desc"
             rows="2"
-            required
             style="width:500px"
           ></textarea>
           <small [hidden]="this.form.get('description')!.valid" class="text-danger ml-1">
-            Description is required. Maximum characters: 100.
+           Maximum characters: 100.
           </small>
           <small [hidden]="!this.form.get('description')!.valid" class="text-muted ml-1">
-            Click to edit.
+            Click to edit. Maximum characters: 100.
           </small>
         </div>
       </div>

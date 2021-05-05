@@ -26,7 +26,6 @@ export class NewCategoryComponent {
           Validators.compose(
             [
               Validators.required,
-              Validators.minLength(1),
               Validators.maxLength(50)
             ]
           )
@@ -34,8 +33,6 @@ export class NewCategoryComponent {
         description: new FormControl('',
           Validators.compose(
             [
-              Validators.required,
-              Validators.minLength(1),
               Validators.maxLength(100)
             ]
           ))

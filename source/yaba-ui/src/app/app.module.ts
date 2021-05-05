@@ -5,7 +5,15 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {LineChartModule, NgxChartsModule} from '@swimlane/ngx-charts';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { NgxBootstrapIconsModule } from 'ngx-bootstrap-icons';
-import { personCircle, filePersonFill, envelope, trash, calendar3 } from 'ngx-bootstrap-icons';
+import {
+  personCircle,
+  filePersonFill,
+  envelope,
+  trash,
+  calendar3,
+  eyeFill,
+  eyeSlashFill,
+} from 'ngx-bootstrap-icons';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -39,7 +47,9 @@ const icons = {
   filePersonFill,
   envelope,
   trash,
-  calendar3
+  calendar3,
+  eyeFill,
+  eyeSlashFill,
 };
 
 @NgModule({

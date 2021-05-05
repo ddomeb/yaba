@@ -47,8 +47,8 @@
       </div>
     </header>
   </div>
-  <div>
-    <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
+  <div class="container-fluid">
     <router-outlet *ngIf="contentLoadable | async"></router-outlet>
+    <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
   </div>
 </ng-container>

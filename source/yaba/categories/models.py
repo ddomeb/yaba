@@ -7,7 +7,7 @@ class MainCategory(models.Model):
         verbose_name_plural = "Main categories"
 
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=100)
+    description = models.CharField(blank=True, max_length=100)
     # color = models.CharField(max_length=)
     owner = models.ForeignKey(
         User,
@@ -25,7 +25,7 @@ class SubCategory(models.Model):
         verbose_name_plural = "Subcategories"
 
     name = models.CharField(max_length=80)
-    description = models.CharField(max_length=150)
+    description = models.CharField(blank=True, max_length=100)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

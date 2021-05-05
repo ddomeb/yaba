@@ -78,7 +78,7 @@ class MainCategoryView(viewsets.ViewSet):
         main_category = get_object_or_404(queryset, pk=pk)
         revert_transactions_for_main_category(main_category.id)
         main_category.delete()
-        return Response(data=dict(), status=status.HTTP_200_OK)
+        return Response(data={}, status=status.HTTP_200_OK)
 
 
 class SubCategoryView(viewsets.ViewSet):
@@ -129,4 +129,4 @@ class SubCategoryView(viewsets.ViewSet):
         subcategory = get_object_or_404(queryset, pk=pk)
         revert_transactions_for_sub_category(subcategory.id)
         subcategory.delete()
-        return Response(data=dict(), status=status.HTTP_200_OK)
+        return Response(data={}, status=status.HTTP_200_OK)

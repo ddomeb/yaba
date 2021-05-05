@@ -4,7 +4,6 @@ from collections import defaultdict
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from pytz import timezone
 from django.db.models import QuerySet, DateTimeField, Sum
 from django.db.models.functions import Trunc
 from rest_framework import status
@@ -13,8 +12,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 
 from accounts.models import Account
-from dashboard.models import AccountHistory, SeriesData, CashFlowStat, MonthlyStats
-from dashboard.serializers import AccountHistorySerializer, MonthlyStatSerializer
+from dashboard.models import AccountHistory, SeriesData
+from dashboard.serializers import AccountHistorySerializer
 from transactions.serializers import TransactionDetailsSerializer
 from yaba.common_utils import account_owned_by_requester, get_this_month_date_range, get_prev_month_date_range
 
@@ -175,7 +174,7 @@ def get_expenses_by_category(
         user: User,
         from_date: datetime.datetime,
         to_date: datetime.datetime
-) -> [dict]:
+) -> typing.List[typing.Dict]:
     sum_dict = defaultdict(lambda: 0)
     for category in user.main_categories.all():
         sum_dict[(category.name, category.id)] = 0
@@ -198,7 +197,7 @@ def get_expenses_by_subcategory(
         category_pk: int,
         from_date: datetime.datetime,
         to_date: datetime.datetime
-) -> [dict]:
+) -> typing.List[typing.Dict]:
     sum_dict = defaultdict(lambda: 0)
     for subcategory in user.subcategories.filter(main_category__id=category_pk):
         sum_dict[(subcategory.name, subcategory.id)] = 0

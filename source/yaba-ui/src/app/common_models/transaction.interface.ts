@@ -2,7 +2,7 @@ import {SubCategory} from './category.interface';
 import {AccountInfo} from './account.interface';
 
 interface TransactionInfoBase {
-  note: string;
+  note?: string;
   amount: number;
   readonly id: number;
   readonly created: Date;

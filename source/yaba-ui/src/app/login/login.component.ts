@@ -15,6 +15,7 @@ import {BehaviorSubject} from 'rxjs';
 export class LoginComponent implements OnInit {
   form: FormGroup;
   public showAuthFail = new BehaviorSubject<boolean>(false);
+  public showPasswordToggle = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -27,6 +28,8 @@ export class LoginComponent implements OnInit {
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
+
+    this.form.valueChanges.subscribe(() => this.showAuthFail.next(false));
   }
 
   login(): void {
@@ -39,6 +42,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['dashboard']);
           }
           else {
+            this.showPasswordToggle.next(false);
             this.showAuthFail.next(true);
           }
         })
