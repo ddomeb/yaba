@@ -8,7 +8,7 @@ class MainCategory(models.Model):
 
     name = models.CharField(max_length=50)
     description = models.CharField(blank=True, max_length=100)
-    # color = models.CharField(max_length=)
+    isIncome = models.BooleanField(default=False)
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

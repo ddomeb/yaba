@@ -92,6 +92,7 @@ class TransactionView(viewsets.ViewSet):
         serializer = TransactionDetailsSerializer(base_queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    # TODO: check if income category amount is positive
     @classmethod
     def create(cls, request: Request) -> Response:
         data = JSONParser().parse(request)

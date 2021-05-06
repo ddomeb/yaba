@@ -8,7 +8,7 @@ class MainCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainCategory
-        fields = ('name', 'id', 'description')
+        fields = ('name', 'id', 'description', 'isIncome')
         read_only_fields = ('id', )
 
 
@@ -37,8 +37,8 @@ class MainCategoryDetailsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MainCategory
-        fields = ('name', 'subcategories', 'id', 'description')
-        read_only_fields = ('id', 'subcategories', )
+        fields = ('name', 'subcategories', 'id', 'description', 'isIncome')
+        read_only_fields = ('id', 'subcategories', 'isIncome')
 
 
 class SubCategoryDetailsSerializer(serializers.ModelSerializer):

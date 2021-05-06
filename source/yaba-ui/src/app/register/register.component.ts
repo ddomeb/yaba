@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
           Validators.compose(
             [
               Validators.required,
-              Validators.pattern('[A-Za-z0-9@.+-_]+')
+              Validators.pattern('[A-Za-z0-9@.+-_ ]+') // TODO: add more chars
             ]
           )
         ),

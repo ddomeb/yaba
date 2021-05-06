@@ -7,35 +7,82 @@
       </p>
     </div>
   </section>
-  <div class="album py-5 bg-light mb-3">
-    <div class="container">
-      <div class="row">
-        <div *ngFor="let category of (mainCategories | async)" class="col-md-4">
-          <div class="card mb-4 box-shadow" >
-            <div
-              class="card-img-top"
-              style="height: 225px; width: 100%; display: table; text-align: center; background-color: black"
-            >
-              <span style="display:table-cell; vertical-align: middle; color:white">{{category.name}}</span>
-            </div>
-            <div class="card-body">
-              <p class="card-text">{{category.description}}</p>
-              <div class="d-flex justify-content-between align-items-center">
-                <div class="btn-group">
-                  <button type="button" class="btn btn-sm btn-outline-secondary" (click)="showCategoryDetails(category)">
-                    View details and subcategories
-                  </button>
-                </div>
-                <div class="btn-group">
-                  <button class="btn-danger btn-sm center" (click)="deleteMainCategory(category.id)" >
-                    <i-bs name="trash" width="1.1em" height="1.1em"></i-bs>
-                  </button>
+  <div class="pb-5 bg-light">
+    <div class="album mb-3">
+      <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+        <li [ngbNavItem]="'expense'">
+          <a class="ml-1" ngbNavLink>Expense</a>
+          <ng-template ngbNavContent>
+            <div class="container">
+              <div class="row">
+                <div
+                  *ngFor="let category of (expenseCategories | async)"
+                  class="col-md-4"
+                >
+                  <div class="card mb-4 box-shadow" >
+                    <div
+                      class="card-img-top"
+                      style="height: 225px; width: 100%; display: table; text-align: center; background-color: black"
+                    >
+                      <span style="display:table-cell; vertical-align: middle; color:white">{{category.name}}</span>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">{{category.description}}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="showCategoryDetails(category)">
+                            View details and subcategories
+                          </button>
+                        </div>
+                        <div class="btn-group">
+                          <button class="btn-danger btn-sm center" (click)="deleteMainCategory(category.id)" >
+                            <i-bs name="trash" width="1.1em" height="1.1em"></i-bs>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="'income'">
+          <a ngbNavLink>Income</a>
+          <ng-template ngbNavContent>
+            <div class="container">
+              <div class="row">
+                <div *ngFor="let category of (incomeCategories | async)" class="col-md-4">
+                  <div class="card mb-4 box-shadow" >
+                    <div
+                      class="card-img-top"
+                      style="height: 225px; width: 100%; display: table; text-align: center; background-color: black"
+                    >
+                      <span style="display:table-cell; vertical-align: middle; color:white">{{category.name}}</span>
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text">{{category.description}}</p>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="showCategoryDetails(category)">
+                            View details and subcategories
+                          </button>
+                        </div>
+                        <div class="btn-group">
+                          <button class="btn-danger btn-sm center" (click)="deleteMainCategory(category.id)" >
+                            <i-bs name="trash" width="1.1em" height="1.1em"></i-bs>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </li>
+      </ul>
+      <div [ngbNavOutlet]="nav" class="mt-2"></div>
     </div>
   </div>
 </div>

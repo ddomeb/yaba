@@ -15,7 +15,7 @@ import {TransactionInfo} from '../../common_models/transaction.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NewTransactionComponent implements OnInit {
-  public mainCategories: BehaviorSubject<MainCategory[]>;
+  public mainCategories: BehaviorSubject<MainCategory[]> = new BehaviorSubject<MainCategory[]>([]);
   public accounts: BehaviorSubject<AccountInfo[]>;
   public mainCategoryDetails: BehaviorSubject<MainCategoryDetails | null>;
   public showDisabledSubCatSelect = new BehaviorSubject<boolean>(true);
@@ -28,7 +28,6 @@ export class NewTransactionComponent implements OnInit {
     private readonly transactionService: TransactionService,
     public activeModal: NgbActiveModal
   ) {
-    this.mainCategories = this.transactionService.mainCategoriesPublisher;
     this.accounts = this.transactionService.accountsPublisher;
     this.mainCategoryDetails = this.transactionService.currentMainCategoryPublisher;
     concat(
@@ -58,6 +57,9 @@ export class NewTransactionComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.mainCategories = this.isIncome ?
+      this.transactionService.incomeCategoriesPublisher
+      : this.transactionService.expenseCategoriesPublisher;
   }
 
   private onMainCategoryChanged(id: string): void {
@@ -88,6 +90,7 @@ export class NewTransactionComponent implements OnInit {
       created: new Date(),
       id: 0
     };
+    this.form.clearValidators();
     this.transactionService.addTransaction(tr).pipe(
       tap(() => this.activeModal.close('ok'))
     ).subscribe();

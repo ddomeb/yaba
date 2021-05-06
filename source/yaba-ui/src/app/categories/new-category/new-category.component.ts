@@ -35,7 +35,8 @@ export class NewCategoryComponent {
             [
               Validators.maxLength(100)
             ]
-          ))
+          )),
+        isIncome: new FormControl('expense', Validators.required)
       }
     );
   }
@@ -59,7 +60,8 @@ export class NewCategoryComponent {
       const cat: MainCategory = {
         description: this.form.value.description,
         name: this.form.value.name,
-        id: 0
+        id: 0,
+        isIncome: this.form.value.isIncome === 'income',
       };
       this.categoriesService.addMainCategory(cat).pipe(
         tap(() => this.activeModal.dismiss('ok'))

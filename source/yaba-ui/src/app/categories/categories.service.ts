@@ -24,7 +24,9 @@ export class CategoriesService {
 
   public currentSubcategoryPublisher = new BehaviorSubject<SubCategoryDetails | null>(this.currentSubcategory);
   public currentMainCategoryPublisher = new BehaviorSubject<MainCategoryDetails | null>(this.currentMainCategory);
-  public mainCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>(this.mainCategories);
+  public mainCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
+  public incomeCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
+  public expenseCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
 
   constructor(private readonly apiService: ApiService) { }
 
@@ -35,6 +37,8 @@ export class CategoriesService {
       tap((response: MainCategory[]) => {
         this.mainCategories = response;
         this.mainCategoriesPublisher.next(this.mainCategories);
+        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome)); // REFACTOR: use partition fun
+        this.expenseCategoriesPublisher.next(response.filter(val => !val.isIncome));
       })
     );
   }

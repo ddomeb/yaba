@@ -4,7 +4,7 @@ import {BehaviorSubject, of, concat, Subject, Observable} from 'rxjs';
 import {CategoriesService} from '../categories.service';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SimpleConfirmModalComponent} from '../../common_components/simple-confirm-modal/simple-confirm-modal.component';
-import {catchError, debounceTime, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {catchError, switchMap, tap} from 'rxjs/operators';
 import {NewCategoryComponent} from '../new-category/new-category.component';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
@@ -86,7 +86,8 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       description: this.form.value.description,
       // tslint:disable-next-line:no-non-null-assertion
       id: this.currentMainCategoryDetails.value!.id,
-      name: this.form.value.name
+      name: this.form.value.name,
+      isIncome: this.currentMainCategoryDetails.value!.isIncome,
     };
     this.categoryService.updateMainCategory(updatedCategory.id, updatedCategory).pipe(
       tap(() => this.form.markAsPristine())

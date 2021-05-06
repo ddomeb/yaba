@@ -20,7 +20,7 @@
           <option *ngFor="let cat of (mainCategories | async)" value="{{cat.id}}">{{cat.name}}</option>
         </select>
         <small
-          *ngIf="(mainCategoryDetails | async ) && ((mainCategoryDetails | async)!.subcategories!.length === 0)"
+          *ngIf="(mainCategoryDetails | async ) && ((mainCategoryDetails | async)!.subcategories!.length === 0) && !form.pristine"
           class="text-danger ml-xl-5"
         >
           This category has no subcategories. Please select another subcategory or add subcategories to this category.

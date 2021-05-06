@@ -2,6 +2,7 @@
 export interface MainCategory {
   name: string;
   description?: string;
+  readonly isIncome: boolean;
   readonly id: number;
 }
 

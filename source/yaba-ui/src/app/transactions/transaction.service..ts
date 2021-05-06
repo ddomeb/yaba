@@ -20,7 +20,9 @@ export class TransactionService {
   private mainCategories: MainCategory[] = [];
   private accounts: AccountInfo[] = [];
   private currentMainCategoryDetails: MainCategoryDetails | null = null;
-  public mainCategoriesPublisher = new BehaviorSubject<MainCategory[]>(this.mainCategories);
+  public mainCategoriesPublisher = new BehaviorSubject<MainCategory[]>([]);
+  public incomeCategoriesPublisher = new BehaviorSubject<MainCategory[]>([]);
+  public expenseCategoriesPublisher = new BehaviorSubject<MainCategory[]>([]);
   public currentMainCategoryPublisher = new BehaviorSubject<MainCategoryDetails | null>(this.currentMainCategoryDetails);
   public transactionsPublisher = new BehaviorSubject<PaginatedTransactionList | null>(this.transactions);
   public accountsPublisher = new BehaviorSubject<AccountInfo[]>(this.accounts);
@@ -88,6 +90,8 @@ export class TransactionService {
       tap((response: Array<MainCategory>) => {
         this.mainCategories = response;
         this.mainCategoriesPublisher.next(this.mainCategories);
+        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome)); // REFACTOR: use partition fun
+        this.expenseCategoriesPublisher.next(response.filter(val => !val.isIncome));
       })
     );
   }

@@ -59,7 +59,12 @@
         </button>
       </div>
     </div>
-    <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="model.direction" [ngModelOptions]="{standalone: true}">
+    <div
+      class="btn-group btn-group-toggle"
+      ngbRadioGroup [(ngModel)]="model.direction"
+      [ngModelOptions]="{standalone: true}"
+      (ngModelChange)="onChangeDirection($event)"
+    >
       <label ngbButtonLabel class="btn btn-sm btn-outline-success center" for="income">
         <input
           type="radio"

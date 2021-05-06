@@ -1,7 +1,6 @@
 <ng-container *ngIf="(data | async)">
   <ngx-charts-number-card
     [view]="view"
-    [scheme]="colorScheme"
     [results]="(data | async)"
     [cardColor]="cardColor"
     [valueFormatting]="valueFormatting"

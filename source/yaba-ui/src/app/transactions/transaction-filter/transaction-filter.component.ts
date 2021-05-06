@@ -72,6 +72,11 @@ export class TransactionFilterComponent implements OnInit {
     if ($event === '') {
       this.model.mainCategoryModel = null;
       $event = null;
+    } else {
+      const cat: MainCategory[] | null = this.mainCategories.value.filter(val => val.id === parseInt($event, 10));
+      if (cat) {
+        this.model.direction = cat[0].isIncome ? 'in' : 'out';
+      }
     }
     this.showDisabledSubCatSelect.next($event === null);
     this.model.subcategoryModel = null;
@@ -88,5 +93,19 @@ export class TransactionFilterComponent implements OnInit {
       direction: '',
     };
     this.onSubmitParams();
+  }
+
+  onChangeDirection($event: any): void {
+    if ($event === 'in'){
+      this.mainCategories = this.transactionService.incomeCategoriesPublisher;
+    }
+    else if ($event === 'out'){
+      this.mainCategories = this.transactionService.expenseCategoriesPublisher;
+    }
+    else {
+      this.mainCategories = this.transactionService.mainCategoriesPublisher;
+    }
+    this.model.mainCategoryModel = this.model.subcategoryModel = '';
+    this.onChangeCategory('');
   }
 }

@@ -1,9 +1,14 @@
 <div class="container">
-  <div class="container center">
-    <button type="button" class="btn btn-success m-3" (click)="addNewTransaction('income')">Add Income</button>
-    <button type="button" class="btn btn-secondary m-3" (click)="addNewTransaction('expense')">Add Expense</button>
-  </div>
-  <div class="container">
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h3 class="jumbotron-heading">Transactions</h3>
+      <div class="center">
+        <button type="button" class="btn btn-success m-3" (click)="addNewTransaction('income')">Add Income</button>
+        <button type="button" class="btn btn-secondary m-3" (click)="addNewTransaction('expense')">Add Expense</button>
+      </div>
+    </div>
+  </section>
+  <div>
     <app-transaction-filter (applyParams)="queryTransactions($event)"></app-transaction-filter>
   </div>
   <ng-container *ngIf="(transactionPublisher | async) && (transactionPublisher | async)!.count > 0">
@@ -19,7 +24,7 @@
       </thead>
       <tbody>
           <tr *ngFor="let transaction of (transactionPublisher | async)!.results">
-            <th scope="row">{{ transaction.created | date: "YYYY.MM.dd hh:mm" }}</th>
+            <th scope="row">{{ transaction.created | date: "YYYY.MM.dd HH:mm" }}</th>
             <td [ngClass]="{'table-success': transaction.amount > 0, 'table-danger': transaction.amount < 0}">
               {{transaction.amount}} HUF
             </td>
