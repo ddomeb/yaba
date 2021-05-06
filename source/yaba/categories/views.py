@@ -44,10 +44,10 @@ class MainCategoryView(viewsets.ViewSet):
         base_queryset = request.user.main_categories.all()
 
         if is_income := request.GET.get('is_income'):
-            if is_income.tolower() == 'true':
-                base_queryset.filter(isIncome=True)
-            if is_income.tolower() == 'false':
-                base_queryset.filter(isIncome=False)
+            if is_income.lower() == 'true':
+                base_queryset = base_queryset.filter(isIncome=True)
+            if is_income.lower() == 'false':
+                base_queryset = base_queryset.filter(isIncome=False)
 
         serializer = MainCategorySerializer(base_queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

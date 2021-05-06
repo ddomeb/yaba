@@ -121,11 +121,12 @@ class TransactionView(viewsets.ViewSet):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # TODO: don't really need this.
     @classmethod
     def retrieve(cls, request: Request, pk=None) -> Response:
-        queryset = request.user.subcategories.all()
-        subcategory = get_object_or_404(queryset, pk=pk)
-        serializer = TransactionDetailsSerializer(subcategory)
+        queryset = request.user.transactions.all()
+        transaction = get_object_or_404(queryset, pk=pk)
+        serializer = TransactionDetailsSerializer(transaction)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     @classmethod

@@ -30,7 +30,7 @@ class AccountViewUnitTests(APITestCase):
         response = self.view.list(request)
 
         self.assertEqual(response.status_code, 200, 'Account listing HTTP 200')
-        self.assertEqual(len(response.data), 1, 'Account listing response empty')
+        self.assertEqual(len(response.data), 1, 'Account listing response contains single account')
         self.assertEqual(
             response.data[0]["name"],
             "testaccount",
@@ -80,8 +80,8 @@ class AccountViewUnitTests(APITestCase):
 
         response = self.view.create(request)
 
-        self.assertEqual(response.status_code, 400, 'Account create success HTTP 400')
-        self.assertEqual(list(response.data.keys()), ['name', 'type'])
+        self.assertEqual(response.status_code, 400, 'Account create failed HTTP 400')
+        self.assertCountEqual(list(response.data.keys()), ['name', 'type'])
 
     def test_retrieve_account(self):
         request = self.factory.get(f'/accounts/{self.test_account_id}')
