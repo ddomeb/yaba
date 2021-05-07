@@ -22,6 +22,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
   public currentEditedSubcategory = new BehaviorSubject<SubCategory | null>(null);
   private unsubscribe = new Subject<void>();
   private editedSubcategory: SubCategory | null = null;
+  private categoryInfo: {name: string, description?: string} | null = null;
 
   constructor(
     private readonly categoryService: CategoriesService,
@@ -52,6 +53,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
           // tslint:disable-next-line:no-non-null-assertion
           this.form.get('description')!.setValue(response.description, {emitEvent: false});
         }
+        this.categoryInfo = {name: response.name, description: response.description};
       }),
       catchError(() => of(false))
     ).subscribe();
@@ -116,6 +118,11 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
 
   public updateMainCategory(): void {
     if (!this.form.valid || this.form.pristine) {
+      this.form.reset();
+      // tslint:disable-next-line:no-non-null-assertion
+      this.form.get('name')!.setValue(this.categoryInfo!.name, {emitEvent: false});
+      // tslint:disable-next-line:no-non-null-assertion
+      this.form.get('description')!.setValue(this.categoryInfo!.description, {emitEvent: false});
       return;
     }
     const updatedCategory: MainCategory = {
@@ -126,8 +133,9 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line:no-non-null-assertion
       isIncome: this.currentMainCategoryDetails.value!.isIncome,
     };
+    this.categoryInfo = {name: updatedCategory.name, description: updatedCategory.description};
     this.categoryService.updateMainCategory(updatedCategory.id, updatedCategory).pipe(
-      tap(() => this.form.markAsPristine())
+      tap(() => this.form.markAsPristine()),
     ).subscribe();
   }
 
