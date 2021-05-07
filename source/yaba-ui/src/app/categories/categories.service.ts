@@ -92,7 +92,7 @@ export class CategoriesService {
     );
   }
 
-  updateSubCategory(id: number, updatedCategory: MainCategory): Observable<any> {
+  updateSubCategory(id: number, updatedCategory: SubCategory): Observable<any> {
     return concat(
       this.apiService.put(CategoriesService.SUBCATEGORIES_ENDPOINT + id.toString() + '/', updatedCategory),
       this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MainCategory, MainCategoryDetails} from '../../common_models/category.interface';
+import {MainCategory, MainCategoryDetails, SubCategory} from '../../common_models/category.interface';
 import {BehaviorSubject, of, concat, Subject, Observable} from 'rxjs';
 import {CategoriesService} from '../categories.service';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
@@ -18,7 +18,10 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
   @Input() categoryId = 0;
   public currentMainCategoryDetails: BehaviorSubject<MainCategoryDetails | null>;
   public form: FormGroup;
+  public subCategoryForm: FormGroup | null = null;
+  public currentEditedSubcategory = new BehaviorSubject<SubCategory | null>(null);
   private unsubscribe = new Subject<void>();
+  private editedSubcategory: SubCategory | null = null;
 
   constructor(
     private readonly categoryService: CategoriesService,
@@ -68,6 +71,39 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
+  onStartEditSubCategory(subCategory: SubCategory): void {
+    this.subCategoryForm = new FormGroup({
+      name: new FormControl(subCategory.name, Validators.compose([Validators.required, Validators.maxLength(50)])),
+      description: new FormControl(subCategory.description, Validators.maxLength(100))
+    });
+    this.currentEditedSubcategory.next(subCategory);
+    this.editedSubcategory = subCategory;
+  }
+
+  onCancelEditSubCategory(subCategory: SubCategory): void {
+    this.currentEditedSubcategory.next(null);
+    this.subCategoryForm = null;
+  }
+
+  onConfirmEditSubCategory(subCategory: SubCategory): void {
+    if (this.subCategoryForm === null || !this.subCategoryForm?.valid) {
+      return;
+    }
+    const editedSubcategory = {
+      name: this.subCategoryForm.value.name,
+      description: this.subCategoryForm.value.description,
+      // tslint:disable-next-line:no-non-null-assertion
+      id: this.editedSubcategory!.id
+    };
+    this.categoryService.updateSubCategory(editedSubcategory.id, editedSubcategory).subscribe(
+      result => {
+        this.subCategoryForm = null;
+        this.currentEditedSubcategory.next(null);
+      }
+    );
+  }
+
+
   addNewSubCategory(): void {
     const modalRef = this.modalService.open(NewCategoryComponent);
     modalRef.componentInstance.isSubcategory = true;
@@ -87,6 +123,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       // tslint:disable-next-line:no-non-null-assertion
       id: this.currentMainCategoryDetails.value!.id,
       name: this.form.value.name,
+      // tslint:disable-next-line:no-non-null-assertion
       isIncome: this.currentMainCategoryDetails.value!.isIncome,
     };
     this.categoryService.updateMainCategory(updatedCategory.id, updatedCategory).pipe(
@@ -94,7 +131,4 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  editSubcategory(subcategory: any): void {
-    console.log(subcategory);
-  }
 }
