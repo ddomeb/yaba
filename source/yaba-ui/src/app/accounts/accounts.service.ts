@@ -8,6 +8,15 @@ import {ApiService} from '../services/apiservice.service';
 import {map, tap} from 'rxjs/operators';
 import {PaginatedTransactionList} from '../common_models/transaction.interface';
 import {AccountHistory, SeriesData} from '../common_models/account-history.interface';
+import {AccountsByType} from './accounts.interface';
+
+
+const EMPTY_ACCOUNTS = {
+  accounts: [],
+  savings: [],
+  investments: [],
+  others: []
+};
 
 
 @Injectable({
@@ -22,15 +31,34 @@ export class AccountsService {
   public accountsPublisher: BehaviorSubject<Array<AccountInfo>> =
     new BehaviorSubject<Array<AccountInfo>>([]);
 
-  constructor(private readonly apiService: ApiService) {
-    // this.loadAccounts();
-  }
+  public partitionedAccountsPublisher = new BehaviorSubject<AccountsByType>(JSON.parse(JSON.stringify(EMPTY_ACCOUNTS)));
+
+  constructor(private readonly apiService: ApiService) {}
 
   public loadAccounts(): void {
     this.apiService.get<Array<AccountInfo>>(AccountsService.ACCOUNTS_ENDPOINT).subscribe(
       (response: Array<AccountInfo>) => {
         this.accounts = response;
         this.accountsPublisher.next(this.accounts);
+        const partitionedAccounts: AccountsByType = JSON.parse(JSON.stringify(EMPTY_ACCOUNTS));
+        response.forEach(
+          value => {
+            switch (value.type) {
+              case 'account':
+                partitionedAccounts.accounts.push(value);
+                break;
+              case 'investment':
+                partitionedAccounts.investments.push(value);
+                break;
+              case 'savings':
+                partitionedAccounts.savings.push(value);
+                break;
+              default:
+                partitionedAccounts.others.push(value);
+            }
+          }
+        );
+        this.partitionedAccountsPublisher.next(partitionedAccounts);
       }
     );
   }

@@ -44,7 +44,11 @@ export class DashboardService {
     ).subscribe();
   }
 
-  public changeStatsMonth(): void {
+  public changeStatsMonth(s: string): void {
+    if ((this.showPrevMonthData.value && s === 'prev')
+        || (!this.showPrevMonthData.value && s === 'this')) {
+      return;
+    }
     this.showPrevMonthData.next(!this.showPrevMonthData.value);
     if (this.subCategoryStats === null) { return; }
     this.subCatStatPublisher.next(

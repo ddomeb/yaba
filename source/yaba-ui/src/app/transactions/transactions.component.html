@@ -38,7 +38,7 @@
       </tbody>
     </table>
     <div class="center">
-      <nav>
+      <nav *ngIf="(showPaginationLinksPublisher | async)!.previous || (showPaginationLinksPublisher | async)!.next">
         <ul class="pagination">
           <li *ngIf="(showPaginationLinksPublisher | async)!.previous" class="page-item">
             <button class="page-link" (click)="changePage(-1)" tabindex="-1">Previous</button>

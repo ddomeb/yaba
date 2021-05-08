@@ -25,7 +25,7 @@
     <div class="form-group row">
       <label for="type" class="mx-3 my-1">Type:</label>
       <select class="form-select col mr-3" formControlName="type" id="type">
-        <option *ngFor="let t of ACCOUNT_TYPES" value="{{t}}">{{t}}</option>
+        <option *ngFor="let t of ACCOUNT_TYPES" value="{{t}}">{{t | titlecase}}</option>
       </select>
     </div>
     <div class="form-group mb-3 mr-0">

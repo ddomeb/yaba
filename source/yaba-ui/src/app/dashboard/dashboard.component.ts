@@ -24,7 +24,7 @@ export class DashboardComponent implements OnInit {
     this.dashService.loadData().subscribe();
   }
 
-  changeStatsMonth(): void {
-    this.dashService.changeStatsMonth();
+  changeStatsMonth(s: string): void {
+    this.dashService.changeStatsMonth(s);
   }
 }

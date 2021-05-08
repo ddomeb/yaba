@@ -6,19 +6,19 @@
   </section>
   <div>
     <div id="monthly-stats" class="row card">
-      <div class="card-header text-center">
+      <div class="card-header text-center font-weight-bold">
         <h4>Monthly cash-flow stats</h4>
       </div>
-      <div *ngIf="(dashDataPublisher | async) && (dashDataPublisher | async)!.monthlyStats" class="card-body">
-        <div class="row">
-          <div class="col text-center border-right">
-            <p>last month</p>
+      <div *ngIf="(dashDataPublisher | async) && (dashDataPublisher | async)!.monthlyStats" class="card-body font-weight-bold">
+        <div class="row font-weight-bold">
+          <div class="col text-center">
+            <p>Last Month</p>
           </div>
-          <div class="col text-center border-left">
-            <p>this month</p>
+          <div class="col text-center">
+            <p>This Month</p>
           </div>
         </div>
-        <div class="row mt-5">
+        <div class="row py-2">
           <div class="col border-right">
             <div class="col row center">
               <div class="mx-3">
@@ -109,9 +109,12 @@
   </div>
   <div class="row card">
     <div class="card-header text-center">
-      <h4 class="modal-title">Monthly expenses by category</h4>
-      <a type="button" (click)="changeStatsMonth()">
-        {{(showPrevMonthData | async) ? "This month >" : "< Previous month"}}
+      <h4 class="modal-title mb-1">Monthly expenses by category</h4>
+      <a type="button" class="mr-1" (click)="changeStatsMonth('prev')" [ngClass]="{'font-weight-bold': !(showPrevMonthData | async)}">
+        < Previous month
+      </a>
+      <a type="button" class="mr-1" (click)="changeStatsMonth('this')" [ngClass]="{'font-weight-bold': (showPrevMonthData | async)}">
+        Next month >
       </a>
     </div>
     <div class="card-body">

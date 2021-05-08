@@ -4,7 +4,7 @@ export interface AccountInfo {
   description?: string;
   balance: number;
   readonly created: Date;
-  type: 'account' | 'savings';
+  type: 'account' | 'savings' | 'investment' | 'other';
   isEnabled: boolean;
   readonly id: number;
 }

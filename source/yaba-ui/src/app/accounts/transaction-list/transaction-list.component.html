@@ -5,43 +5,46 @@
   </button>
 </div>
 <div class="modal-body container">
-  <table *ngIf="(currentPagePublisher | async)!.count > 0" class="table table-striped">
-    <thead>
+  <ng-container *ngIf="(currentPagePublisher | async)!.count > 0">
+    <table class="table table-striped">
+      <thead>
       <tr>
         <th scope="col">Date</th>
         <th scope="col">Amount</th>
         <th scope="col">Subcategory</th>
         <th scope="col">Note</th>
       </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let transaction of (currentPagePublisher | async)!.results; index as i">
-  <!--    <th scope="row">{{ i + 1 }}</th>-->
-      <td>{{ transaction.created | date:'short' }}</td>
-      <td>{{ transaction.amount | number }}</td>
-      <td style="max-width: 155px; overflow-wrap: break-word;">{{ transaction.subcategory.name }}</td>
-      <td>
-        <button
-          type="button"
-          class="btn btn-outline-secondary mr-2"
-          placement="right"
-          ngbPopover="{{transaction.note}}"
-          popoverTitle="Note"
-          *ngIf="transaction.note"
-        >
-          Show note
-        </button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <h4 *ngIf="(currentPagePublisher | async)!.count === 0" class="center">
-    No transaction for this account yet.
-  </h4>
-  <div>
-    <div class="btn-group pagination mx-5" role="group">
-        <button class="btn btn-secondary" [disabled]="! (showPaginationLinks | async)!.prev" (click)="changePage(-1)">< Previous</button>
-        <button class="btn btn-secondary" [disabled]="!(showPaginationLinks | async)!.next" (click)="changePage(+1)">Next ></button>
+      </thead>
+      <tbody>
+      <tr *ngFor="let transaction of (currentPagePublisher | async)!.results; index as i">
+        <!--    <th scope="row">{{ i + 1 }}</th>-->
+        <td>{{ transaction.created | date:'short' }}</td>
+        <td>{{ transaction.amount | number }}</td>
+        <td style="max-width: 155px; overflow-wrap: break-word;">{{ transaction.subcategory.name }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-outline-secondary mr-2"
+            placement="right"
+            ngbPopover="{{transaction.note}}"
+            popoverTitle="Note"
+            *ngIf="transaction.note"
+          >
+            Show note
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div>
+      <div class="btn-group pagination mx-5" role="group" *ngIf="(showPaginationLinks | async)!.prev || (showPaginationLinks | async)!.next">
+        <button class="btn btn-primary" [disabled]="!(showPaginationLinks | async)!.prev" (click)="changePage(-1)">< Previous</button>
+        <button class="btn btn-primary" [disabled]="!(showPaginationLinks | async)!.next" (click)="changePage(+1)">Next ></button>
+      </div>
     </div>
+  </ng-container>
+  <div class="text-center my-4 text-muted" *ngIf="(currentPagePublisher | async)!.count === 0">
+    <h4>No transaction for this account yet.</h4>
   </div>
+
 </div>

@@ -18,7 +18,7 @@ export class AccountDetailsComponent implements OnInit {
   @Input() isEdit = true;
   public form: FormGroup;
 
-  ACCOUNT_TYPES = [ 'account', 'savings'];
+  ACCOUNT_TYPES = [ 'account', 'savings', 'investment', 'other'];
 
   constructor(
     private readonly activeModal: NgbActiveModal,

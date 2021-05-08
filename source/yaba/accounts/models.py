@@ -5,7 +5,9 @@ from django.contrib.auth.models import User
 class Account(models.Model):
     ACCOUNT_TYPE_CHOICES = (
         ('account', 'Account'),
-        ('savings', 'Savings')
+        ('savings', 'Savings'),
+        ('investment', 'Investments'),
+        ('other', 'Others'),
     )
 
     name = models.CharField(max_length=50)

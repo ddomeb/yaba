@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BehaviorSubject, of} from 'rxjs';
 import {map, switchMap, tap} from 'rxjs/operators';
@@ -10,17 +10,8 @@ import {TransactionListComponent} from './transaction-list/transaction-list.comp
 import {AccountBalanceHistoryComponent} from './account-balance-history/account-balance-history.component';
 import {AccountHistory} from '../common_models/account-history.interface';
 import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';
+import {AccountsByType} from './accounts.interface';
 
-
-const newAccount: AccountInfo =  {
-  name: '',
-  description: '',
-  balance: 0,
-  type: 'account',
-  isEnabled: true,
-  id: -1,
-  created: new Date()
-};
 
 @Component({
   selector: 'app-accounts',
@@ -28,17 +19,20 @@ const newAccount: AccountInfo =  {
   styleUrls: ['./accounts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AccountsComponent implements OnInit {
-  public accountsPublisher: BehaviorSubject<Array<AccountInfo>> = new BehaviorSubject<Array<AccountInfo>>([]);
+export class AccountsComponent implements OnInit, OnDestroy{
+  public accountsPublisher: BehaviorSubject<Array<AccountInfo>>;
+  public partitionedAccounts: BehaviorSubject<AccountsByType>;
 
   constructor(
     private readonly accountsService: AccountsService,
     private readonly modalService: NgbModal
-  ) {}
+  ) {
+    this.accountsPublisher = this.accountsService.accountsPublisher;
+    this.partitionedAccounts = this.accountsService.partitionedAccountsPublisher;
+  }
 
   ngOnInit(): void {
     this.accountsService.loadAccounts();
-    this.accountsPublisher = this.accountsService.accountsPublisher;
   }
 
   public startEditing(id: number): void {
@@ -49,7 +43,6 @@ export class AccountsComponent implements OnInit {
     const modalRef = this.modalService.open(AccountDetailsComponent);
     modalRef.componentInstance.account = JSON.parse(JSON.stringify(account));
     modalRef.componentInstance.isEdit = true;
-    // modalRef.componentInstance.setInfo();
   }
 
   public newAccount(): void {
@@ -80,5 +73,11 @@ export class AccountsComponent implements OnInit {
         modalRef.componentInstance.dataPublisher.next(true);
       }),
     ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    if (this.modalService.hasOpenModals()){
+      this.modalService.dismissAll('nok');
+    }
   }
 }

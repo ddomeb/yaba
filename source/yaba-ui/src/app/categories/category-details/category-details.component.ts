@@ -98,7 +98,7 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
       id: this.editedSubcategory!.id
     };
     this.categoryService.updateSubCategory(editedSubcategory.id, editedSubcategory).subscribe(
-      result => {
+      _ => {
         this.subCategoryForm = null;
         this.currentEditedSubcategory.next(null);
       }
