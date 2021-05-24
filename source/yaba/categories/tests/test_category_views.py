@@ -3,19 +3,19 @@ from rest_framework.test import APITestCase
 from django.contrib.auth.models import User
 
 from categories.views import MainCategoryView, SubCategoryView
-from yaba.tests.test_utils import add_test_category, add_test_subcategory
+from yaba.tests.utils import add_test_category, add_test_subcategory
 
 
 class MainCategoryViewUnitTests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user('testuser', 'testemail', 'testpass')
+        self.user = User.objects.create_user("testuser", "testemail", "testpass")
         self.factory = RequestFactory()
         self.view = MainCategoryView()
         self.income_category = add_test_category(owner=self.user, name="income", is_income=True, description="in")
         self.expense_category = add_test_category(owner=self.user, name="expense", is_income=False, description="out")
 
     def test_list_all_categories(self):
-        request = self.factory.get('/categories')
+        request = self.factory.get("/categories")
         request.user = self.user
         self.view.setup(request)
 
@@ -27,9 +27,7 @@ class MainCategoryViewUnitTests(APITestCase):
 
     def test_list_queried_categories(self):
         for cat in self.income_category, self.expense_category:
-            request = self.factory.get('/categories/?is_income={}'.format(
-                'true' if cat.isIncome else 'false'
-            ))
+            request = self.factory.get("/categories/?is_income={}".format("true" if cat.isIncome else "false"))
             request.user = self.user
             self.view.setup(request)
 
@@ -44,7 +42,7 @@ class MainCategoryViewUnitTests(APITestCase):
 
     def test_add_new_category(self):
         data = {"name": "new main category", "description": "new description"}
-        request = self.factory.post('/categories/', data, content_type='application/json')
+        request = self.factory.post("/categories/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)
 
@@ -56,7 +54,7 @@ class MainCategoryViewUnitTests(APITestCase):
 
     def test_add_category_validation_errors(self):
         data = {}
-        request = self.factory.post('/categories/', data, content_type='application/json')
+        request = self.factory.post("/categories/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)
 
@@ -69,16 +67,17 @@ class MainCategoryViewUnitTests(APITestCase):
 
 class SubcategoryViewUnitTests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user('testuser', 'testemail', 'testpass')
+        self.user = User.objects.create_user("testuser", "testemail", "testpass")
         self.factory = RequestFactory()
         self.view = SubCategoryView()
         self.main_category = add_test_category(owner=self.user, name="income", is_income=True, description="in")
-        self.subcategory = \
-            add_test_subcategory(owner=self.user, name="subcategory", main_category_pk=self.main_category.pk)
+        self.subcategory = add_test_subcategory(
+            owner=self.user, name="subcategory", main_category_pk=self.main_category.pk
+        )
 
     def test_create_valid_subcategory(self):
         data = {"name": "new subcategory", "description": "new description", "main_category": self.main_category.pk}
-        request = self.factory.post('/subcategories/', data, content_type='application/json')
+        request = self.factory.post("/subcategories/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)
 
@@ -90,7 +89,7 @@ class SubcategoryViewUnitTests(APITestCase):
 
     def test_add_category_validation_errors(self):
         data = {}
-        request = self.factory.post('/subcategories/', data, content_type='application/json')
+        request = self.factory.post("/subcategories/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)
 
@@ -104,7 +103,7 @@ class SubcategoryViewUnitTests(APITestCase):
         new_user = User.objects.create_user("new_user")
         new_category = add_test_category(new_user)
         data = {"name": "test", "main_category": new_category.pk}
-        request = self.factory.post('/subcategories/', data, content_type='application/json')
+        request = self.factory.post("/subcategories/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)
 

@@ -15,19 +15,14 @@ class TransactionDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = (
-            'note',
-            'amount',
-            'subcategory',
-            'account',
-            'id',
-            'created',
+            "note",
+            "amount",
+            "subcategory",
+            "account",
+            "id",
+            "created",
         )
-        read_only_fields = (
-            'created',
-            'id',
-            'subcategory',
-            'account'
-        )
+        read_only_fields = ("created", "id", "subcategory", "account")
 
 
 class TransactionSerializer(serializers.ModelSerializer):
@@ -37,20 +32,15 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = (
-            'note',
-            'amount',
-            'subcategory',
-            'account',
-            'id',
+            "note",
+            "amount",
+            "subcategory",
+            "account",
+            "id",
         )
-        read_only_fields = (
-            'created',
-            'id',
-            'subcategory',
-            'account'
-        )
+        read_only_fields = ("created", "id", "subcategory", "account")
 
     def to_representation(self, instance):
-        self.fields['subcategory'] = SubCategorySerializer()
-        self.fields['account'] = AccountSerializer()
+        self.fields["subcategory"] = SubCategorySerializer()
+        self.fields["account"] = AccountSerializer()
         return super(TransactionSerializer, self).to_representation(instance)

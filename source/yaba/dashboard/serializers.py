@@ -11,21 +11,8 @@ class SeriesDataSerializer(serializers.Serializer):
         return SeriesData(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.value = validated_data.get('value', instance.value)
-        instance.name = validated_data.get('name', instance.name)
-        return instance
-
-
-class AccountHistorySerializer(serializers.Serializer):
-    name = serializers.CharField()
-    series = SeriesDataSerializer(many=True)
-
-    def create(self, validated_data):
-        return AccountHistory(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.series = validated_data.get('series', instance.series)
+        instance.value = validated_data.get("value", instance.value)
+        instance.name = validated_data.get("name", instance.name)
         return instance
 
 
@@ -37,8 +24,8 @@ class CashFlowStatSerializer(serializers.Serializer):
         return CashFlowStat(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.income = validated_data.get('income', instance.income)
-        instance.expense = validated_data.get('income', instance.expense)
+        instance.income = validated_data.get("income", instance.income)
+        instance.expense = validated_data.get("income", instance.expense)
         return instance
 
 
@@ -50,6 +37,6 @@ class MonthlyStatSerializer(serializers.Serializer):
         return MonthlyStatSerializer(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.thisMonth = validated_data.get('thisMonth', instance.thisMonth)
-        instance.prevMonth = validated_data.get('prevMonth', instance.prevMonth)
+        instance.thisMonth = validated_data.get("thisMonth", instance.thisMonth)
+        instance.prevMonth = validated_data.get("prevMonth", instance.prevMonth)
         return instance

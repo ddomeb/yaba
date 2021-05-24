@@ -4,22 +4,21 @@ from django.contrib.auth.models import User
 
 class Account(models.Model):
     ACCOUNT_TYPE_CHOICES = (
-        ('account', 'Account'),
-        ('savings', 'Savings'),
-        ('investment', 'Investments'),
-        ('other', 'Others'),
+        ("account", "Account"),
+        ("savings", "Savings"),
+        ("investment", "Investments"),
+        ("other", "Others"),
     )
 
     name = models.CharField(max_length=50)
     description = models.TextField(blank=True, max_length=250)
     balance = models.IntegerField()
     created = models.DateTimeField(auto_now_add=True, editable=False)
-    type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES, default='account')
-    isEnabled = models.BooleanField(default=True)
+    type = models.CharField(max_length=20, choices=ACCOUNT_TYPE_CHOICES, default="account")
     owner = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='accounts',
+        related_name="accounts",
         db_index=True,
     )
 

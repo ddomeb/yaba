@@ -9,23 +9,29 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('categories', '0001_initial'),
+        ("categories", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='maincategory',
-            name='owner',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='main_categories', to=settings.AUTH_USER_MODEL),
+            model_name="maincategory",
+            name="owner",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="main_categories", to=settings.AUTH_USER_MODEL
+            ),
         ),
         migrations.AlterField(
-            model_name='subcategory',
-            name='main_category',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subcategories', to='categories.maincategory'),
+            model_name="subcategory",
+            name="main_category",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="subcategories", to="categories.maincategory"
+            ),
         ),
         migrations.AlterField(
-            model_name='subcategory',
-            name='owner',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='subcategories', to=settings.AUTH_USER_MODEL),
+            model_name="subcategory",
+            name="owner",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, related_name="subcategories", to=settings.AUTH_USER_MODEL
+            ),
         ),
     ]

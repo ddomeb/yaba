@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('categories', '0006_alter_subcategory_description'),
+        ("categories", "0006_alter_subcategory_description"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='maincategory',
-            name='isIncome',
+            model_name="maincategory",
+            name="isIncome",
             field=models.BooleanField(default=False),
         ),
     ]

@@ -8,18 +8,10 @@ from rest_framework.response import Response
 from accounts.serializers import AccountSerializer
 
 
-def get_account_query_set_from_request(request: Request) -> QuerySet:
-    base_query = request.user.accounts.all()
-    if acc_t := request.GET.get('type'):
-        base_query = base_query.filter(type=acc_t)
-    return base_query
-
-
 class AccountView(viewsets.ViewSet):
-
     @classmethod
     def list(cls, request: Request) -> Response:
-        queryset = get_account_query_set_from_request(request)
+        queryset = cls._get_account_query_set_from_request(request)
         serializer = AccountSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -57,3 +49,10 @@ class AccountView(viewsets.ViewSet):
         account = get_object_or_404(queryset, pk=pk)
         account.delete()
         return Response(data={}, status=status.HTTP_200_OK)
+
+    @classmethod
+    def _get_account_query_set_from_request(cls, request: Request) -> QuerySet:
+        base_query = request.user.accounts.all()
+        if acc_t := request.GET.get("type"):
+            base_query = base_query.filter(type=acc_t)
+        return base_query

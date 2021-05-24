@@ -2,7 +2,6 @@ from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.parsers import JSONParser
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -17,36 +16,33 @@ from categories.serializers import (
 )
 
 
-def revert_transactions_for_main_category(pk: int) -> None:
-    revert_transactions(
-        Transaction.objects.filter(subcategory__main_category__id=pk)
-    )
+class RevertTransactionsMixin:
+    @classmethod
+    def revert_transactions_for_main_category(cls, pk: int) -> None:
+        cls._revert_transactions(Transaction.objects.filter(subcategory__main_category__id=pk))
+
+    @classmethod
+    def revert_transactions_for_sub_category(cls, pk: int) -> None:
+        cls._revert_transactions(Transaction.objects.filter(subcategory__id=pk))
+
+    @classmethod
+    def _revert_transactions(cls, query: QuerySet) -> None:
+        for tr in query:
+            account: Account = Account.objects.get(pk=tr.account.id)
+            account.balance -= tr.amount
+            account.save()
+            tr.delete()
 
 
-def revert_transactions_for_sub_category(pk: int) -> None:
-    revert_transactions(
-        Transaction.objects.filter(subcategory__id=pk)
-    )
-
-
-def revert_transactions(query: QuerySet) -> None:
-    for tr in query:
-        account: Account = Account.objects.get(pk=tr.account.id)
-        account.balance -= tr.amount
-        account.save()
-        tr.delete()
-
-
-class MainCategoryView(viewsets.ViewSet):
-
+class MainCategoryView(viewsets.ViewSet, RevertTransactionsMixin):
     @classmethod
     def list(cls, request: Request) -> Response:
         base_queryset = request.user.main_categories.all()
 
-        if is_income := request.GET.get('is_income'):
-            if is_income.lower() == 'true':
+        if is_income := request.GET.get("is_income"):
+            if is_income.lower() == "true":
                 base_queryset = base_queryset.filter(isIncome=True)
-            if is_income.lower() == 'false':
+            if is_income.lower() == "false":
                 base_queryset = base_queryset.filter(isIncome=False)
 
         serializer = MainCategorySerializer(base_queryset, many=True)
@@ -83,13 +79,12 @@ class MainCategoryView(viewsets.ViewSet):
     def destroy(cls, request: Request, pk=None) -> Response:
         queryset = request.user.main_categories.all()
         main_category = get_object_or_404(queryset, pk=pk)
-        revert_transactions_for_main_category(main_category.id)
+        cls.revert_transactions_for_main_category(main_category.id)
         main_category.delete()
         return Response(data={}, status=status.HTTP_200_OK)
 
 
-class SubCategoryView(viewsets.ViewSet):
-    permission_classes = [IsAuthenticated, ]
+class SubCategoryView(viewsets.ViewSet, RevertTransactionsMixin):
 
     # Check if the request sender actually owns the main category referenced in the posted subcategory.
     # If not send the error message that does not show if the passed main category ID is owned by a different user
@@ -97,13 +92,10 @@ class SubCategoryView(viewsets.ViewSet):
     @classmethod
     def create(cls, request: Request) -> Response:
         data = JSONParser().parse(request)
-        if "main_category" in data.keys() \
-                and not main_category_owned_by_requester(data['main_category'], request):
+        if "main_category" in data.keys() and not main_category_owned_by_requester(data["main_category"], request):
             return Response(
-                data={"main_category": [
-                    f"Invalid pk \"{data['main_category']}\" - object does not exists."
-                ]},
-                status=status.HTTP_400_BAD_REQUEST
+                data={"main_category": [f"Invalid pk \"{data['main_category']}\" - object does not exists."]},
+                status=status.HTTP_400_BAD_REQUEST,
             )
 
         serializer = SubCategorySerializer(data=data)
@@ -134,6 +126,6 @@ class SubCategoryView(viewsets.ViewSet):
     def destroy(cls, request: Request, pk=None) -> Response:
         queryset = request.user.subcategories.all()
         subcategory = get_object_or_404(queryset, pk=pk)
-        revert_transactions_for_sub_category(subcategory.id)
+        cls.revert_transactions_for_sub_category(subcategory.id)
         subcategory.delete()
         return Response(data={}, status=status.HTTP_200_OK)

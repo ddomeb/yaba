@@ -15,16 +15,28 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='Account',
+            name="Account",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=250)),
-                ('description', models.TextField()),
-                ('balance', models.IntegerField()),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('type', models.CharField(choices=[('account', 'Account'), ('savings', 'Savings')], default='account', max_length=20)),
-                ('isEnabled', models.BooleanField(default=True)),
-                ('owner', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='accounts', to=settings.AUTH_USER_MODEL)),
+                ("id", models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("name", models.CharField(max_length=250)),
+                ("description", models.TextField()),
+                ("balance", models.IntegerField()),
+                ("created", models.DateTimeField(auto_now_add=True)),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("account", "Account"), ("savings", "Savings")], default="account", max_length=20
+                    ),
+                ),
+                ("isEnabled", models.BooleanField(default=True)),
+                (
+                    "owner",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="accounts",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]
