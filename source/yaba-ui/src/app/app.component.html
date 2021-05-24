@@ -5,7 +5,7 @@
         <ng-container *ngIf="isLoggedInPublisher | async">
           <p class="h5 my-0 me-md-auto fw-normal" routerLink="dashboard">Yaba</p>
         </ng-container>
-        <ng-container *ngIf="!(isLoggedInPublisher | async)">
+        <ng-container *ngIf="(isLoggedInPublisher | async) === false">
           <p class="h5 my-0 me-md-auto fw-normal" routerLink="about">Yaba</p>
         </ng-container>
         <nav class="my-2 my-md-0 me-md-3">
@@ -16,9 +16,9 @@
             <a class="p-2 text-dark" routerLink="categories">Categories</a>
           </ng-container>
         </nav>
-        <ng-container *ngIf="!(isLoggedInPublisher | async)">
-          <a class="btn btn-outline-primary" routerLink="login">Log in</a>
-          <a class="btn btn-outline-primary" routerLink="register">Register</a>
+        <ng-container *ngIf="(isLoggedInPublisher | async) === false">
+          <a class="btn btn-outline-primary mx-1" routerLink="login">Log in</a>
+          <a class="btn btn-outline-primary mx-1" routerLink="register">Register</a>
         </ng-container>
         <ng-container *ngIf="isLoggedInPublisher | async">
           <div ngbDropdown class="d-inline-block ml-lg-5">
@@ -48,7 +48,7 @@
     </header>
   </div>
   <div class="container-fluid">
-    <router-outlet *ngIf="contentLoadable | async"></router-outlet>
     <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
+    <router-outlet *ngIf="contentLoadable | async"></router-outlet>
   </div>
 </ng-container>

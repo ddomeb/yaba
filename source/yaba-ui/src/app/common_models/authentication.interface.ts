@@ -6,7 +6,6 @@ export interface UserData {
   last_name: string;
 }
 
-
 export interface AuthenticationResponse {
   access_token: string;
   refresh_token: string;

@@ -37,7 +37,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     this.transactionPublisher = transactionService.transactionsPublisher;
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     concat(
       this.transactionService.loadAccounts(),
       this.transactionService.loadMainCategories(),
@@ -86,7 +86,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  queryTransactions($event: FilterParams): void {
+  public queryTransactions($event: FilterParams): void {
     this.transactionService.queryTransactions(
       1,
       $event.dateFrom,
@@ -120,7 +120,7 @@ export class TransactionsComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     if (this.modalService.hasOpenModals()) {
       this.modalService.dismissAll();
     }

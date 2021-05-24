@@ -16,7 +16,6 @@ import {CategoryDetailsComponent} from './category-details/category-details.comp
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CategoriesComponent implements OnInit, OnDestroy {
-  public mainCategories: BehaviorSubject<Array<MainCategory>>;
   public incomeCategories: BehaviorSubject<Array<MainCategory>>;
   public expenseCategories: BehaviorSubject<Array<MainCategory>>;
   public currentMainCategoryDetails: BehaviorSubject<MainCategoryDetails | null>;
@@ -26,15 +25,13 @@ export class CategoriesComponent implements OnInit, OnDestroy {
     private readonly categoriesService: CategoriesService,
     private readonly modalService: NgbModal
   ) {
-    this.mainCategories = this.categoriesService.mainCategoriesPublisher;
     this.incomeCategories = this.categoriesService.incomeCategoriesPublisher;
     this.expenseCategories = this.categoriesService.expenseCategoriesPublisher;
     this.currentMainCategoryDetails = this.categoriesService.currentMainCategoryPublisher;
     this.categoriesService.loadMainCategories().subscribe();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   ngOnDestroy(): void {
     if (this.modalService.hasOpenModals()){
@@ -58,7 +55,6 @@ export class CategoriesComponent implements OnInit, OnDestroy {
   showCategoryDetails(category: MainCategory): void {
     const modalRef = this.modalService.open(CategoryDetailsComponent, {size: 'lg'});
     modalRef.componentInstance.categoryId = category.id;
-    // modalRef.componentInstance
   }
 
 }

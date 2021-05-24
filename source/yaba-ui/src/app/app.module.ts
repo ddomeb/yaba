@@ -28,8 +28,6 @@ import {CategoriesComponent} from './categories/categories.component';
 import {AccountDetailsComponent} from './accounts/account-details/account-details.component';
 import {RegisterComponent} from './register/register.component';
 import {TransactionListComponent} from './accounts/transaction-list/transaction-list.component';
-import {AccountBalanceGraphComponent} from './graph-components/account-balance-graph/account-balance-graph.component';
-import {AccountBalanceHistoryComponent} from './accounts/account-balance-history/account-balance-history.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { TransactionFilterComponent } from './transactions/transaction-filter/transaction-filter.component';
 import { NewTransactionComponent } from './transactions/new-transaction/new-transaction.component';
@@ -62,8 +60,6 @@ const icons = {
     AccountDetailsComponent,
     RegisterComponent,
     TransactionListComponent,
-    AccountBalanceGraphComponent,
-    AccountBalanceHistoryComponent,
     TransactionsComponent,
     TransactionFilterComponent,
     NewTransactionComponent,

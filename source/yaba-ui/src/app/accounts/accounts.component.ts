@@ -1,14 +1,12 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {BehaviorSubject, of} from 'rxjs';
-import {map, switchMap, tap} from 'rxjs/operators';
+import {switchMap} from 'rxjs/operators';
 
 import {AccountInfo} from '../common_models/account.interface';
 import {AccountDetailsComponent} from './account-details/account-details.component';
 import {AccountsService} from './accounts.service';
 import {TransactionListComponent} from './transaction-list/transaction-list.component';
-import {AccountBalanceHistoryComponent} from './account-balance-history/account-balance-history.component';
-import {AccountHistory} from '../common_models/account-history.interface';
 import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';
 import {AccountsByType} from './accounts.interface';
 
@@ -20,14 +18,12 @@ import {AccountsByType} from './accounts.interface';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountsComponent implements OnInit, OnDestroy{
-  public accountsPublisher: BehaviorSubject<Array<AccountInfo>>;
   public partitionedAccounts: BehaviorSubject<AccountsByType>;
 
   constructor(
     private readonly accountsService: AccountsService,
     private readonly modalService: NgbModal
   ) {
-    this.accountsPublisher = this.accountsService.accountsPublisher;
     this.partitionedAccounts = this.accountsService.partitionedAccountsPublisher;
   }
 
@@ -62,17 +58,6 @@ export class AccountsComponent implements OnInit, OnDestroy{
   public showTransactions(account: AccountInfo): void {
     const modalRef = this.modalService.open(TransactionListComponent, {size: 'lg'});
     modalRef.componentInstance.account = account;
-  }
-
-  public showAccountHistory(id: number): void {
-    this.accountsService.getAccountBalanceHistory(id, 'week').pipe(
-      tap((response: AccountHistory) => {
-        const modalRef = this.modalService.open(AccountBalanceHistoryComponent, {size: 'xl'});
-        modalRef.componentInstance.accountId = id;
-        modalRef.componentInstance.data =  new BehaviorSubject<Array<AccountHistory>>([response, ]);
-        modalRef.componentInstance.dataPublisher.next(true);
-      }),
-    ).subscribe();
   }
 
   ngOnDestroy(): void {

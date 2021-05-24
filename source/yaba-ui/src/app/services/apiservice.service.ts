@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 export class ApiService {
   private baseUrl = '//127.0.0.1:8000/';
 
-  constructor(private client: HttpClient){}
+  constructor(private readonly client: HttpClient){}
 
   public get<T = any>(endpoint: string, headers?: HttpHeaders, params?: HttpParams): Observable<T>{
     const fullUrl: string = this.baseUrl + endpoint;

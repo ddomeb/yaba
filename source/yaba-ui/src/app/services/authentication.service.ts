@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
-import {catchError, finalize, shareReplay, switchMap, take, tap} from 'rxjs/operators';
-// import jwtDecode, { JwtPayload } from 'jwt-decode';
+import {catchError, shareReplay, switchMap, tap} from 'rxjs/operators';
 import {SessionInfo, refreshTokenTokenIsExpired, accessTokenIsExpired} from '../common_models/sessioninfo.interface';
 import {AuthenticationResponse, UserData} from '../common_models/authentication.interface';
 import {ToastService} from '../common_components/toast-container/toast.service';
@@ -26,7 +25,6 @@ const SESSION_INFO_KEY = 'session_info';
 const LOGIN_URL = 'authentication/login/';
 const LOGOUT_URL = 'authentication/logout/';
 const REFRESH_URL = 'authentication/token/refresh/';
-const VERIFY_URL = 'authentication/token/verify/';
 const REGISTER_URL = 'register/';
 const PASSWORD_CHANGE_URL = 'authentication/password/change/';
 
@@ -48,11 +46,10 @@ export class AuthenticationService {
 
   public static getSessionInfo(): SessionInfo | null {
     const sessionData: string | null = localStorage.getItem(SESSION_INFO_KEY);
-    console.log('session from local storage', sessionData);
     return sessionData ? JSON.parse(sessionData) : null;
   }
 
-  static clearSession(): void {
+  public static clearSession(): void {
     localStorage.removeItem(SESSION_INFO_KEY);
   }
 
@@ -84,27 +81,22 @@ export class AuthenticationService {
       this.isLoggedIn = false;
       this.loggedInPublisher.next(this.isLoggedIn);
       this.userDataPublisher.next(null);
-      console.log('auth service constructor, session null');
       return of(false);
     }
     else {
       if (refreshTokenTokenIsExpired(session)) {
         this.clearSessionInfo();
         return of(false);
-        console.log('auth service constructor, refresh token expired');
       }
       else {
         if (accessTokenIsExpired(session)) {
-          console.log('auth service constructor, access token expired');
           return this.refreshAccessToken().pipe(
             tap(() => {
               this.isLoggedIn = true;
               this.loggedInPublisher.next(this.isLoggedIn);
               this.userDataPublisher.next(session.user);
-              console.log('auth service constructor, access token expired, refreshed');
             }),
             catchError(() => {
-              console.log('auth service constructor, access token expired, refresh failed');
               this.clearSessionInfo();
               return of(false);
             }),
@@ -112,7 +104,6 @@ export class AuthenticationService {
           );
         }
         else {
-          console.log('auth service constructor, access token valid');
           this.isLoggedIn = true;
           this.loggedInPublisher.next(this.isLoggedIn);
           this.userDataPublisher.next(session.user);
@@ -139,8 +130,6 @@ export class AuthenticationService {
     else {
       return this.client.post<RefreshResponse>(this.baseUrl + REFRESH_URL, {refresh: session.refresh_token.token}).pipe(
         switchMap((response: RefreshResponse) => {
-          console.log('refresh response:', response);
-          console.log('refresh, session before:', response);
           const accessTokenInfo: TokenInfo = AuthenticationService.decodeToken(response.access);
           const refreshTokenInfo: TokenInfo = AuthenticationService.decodeToken(response.refresh);
           session = session as SessionInfo;
@@ -149,7 +138,6 @@ export class AuthenticationService {
           session.refresh_token.token = response.refresh;
           session.refresh_token.expiry = refreshTokenInfo.exp;
           localStorage.setItem(SESSION_INFO_KEY, JSON.stringify(session));
-          console.log('refresh, session after:', session);
           return of(AuthenticationService.getSessionInfo());
         })
       );

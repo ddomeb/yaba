@@ -7,7 +7,6 @@ import {
   MainCategory,
   MainCategoryDetails,
   SubCategory,
-  SubCategoryDetails,
   SubcategoryWithPk
 } from '../common_models/category.interface';
 
@@ -18,13 +17,10 @@ export class CategoriesService {
   private static readonly CATEGORIES_ENDPOINT = 'categories/';
   private static readonly SUBCATEGORIES_ENDPOINT = 'subcategories/';
 
-  private currentSubcategory: SubCategoryDetails | null = null;
   private currentMainCategory: MainCategoryDetails | null = null;
   private mainCategories: Array<MainCategory> = [];
 
-  public currentSubcategoryPublisher = new BehaviorSubject<SubCategoryDetails | null>(this.currentSubcategory);
   public currentMainCategoryPublisher = new BehaviorSubject<MainCategoryDetails | null>(this.currentMainCategory);
-  public mainCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
   public incomeCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
   public expenseCategoriesPublisher = new BehaviorSubject<Array<MainCategory>>([]);
 
@@ -36,8 +32,7 @@ export class CategoriesService {
     ).pipe(
       tap((response: MainCategory[]) => {
         this.mainCategories = response;
-        this.mainCategoriesPublisher.next(this.mainCategories);
-        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome)); // REFACTOR: use partition fun
+        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome));
         this.expenseCategoriesPublisher.next(response.filter(val => !val.isIncome));
       })
     );
@@ -84,7 +79,7 @@ export class CategoriesService {
     );
   }
 
-  updateMainCategory(id: number, updatedCategory: MainCategory): Observable<any> {
+  public updateMainCategory(id: number, updatedCategory: MainCategory): Observable<any> {
     return concat(
       this.apiService.put(CategoriesService.CATEGORIES_ENDPOINT + id.toString() + '/', updatedCategory),
       this.loadMainCategories(),
@@ -92,7 +87,7 @@ export class CategoriesService {
     );
   }
 
-  updateSubCategory(id: number, updatedCategory: SubCategory): Observable<any> {
+  public updateSubCategory(id: number, updatedCategory: SubCategory): Observable<any> {
     return concat(
       this.apiService.put(CategoriesService.SUBCATEGORIES_ENDPOINT + id.toString() + '/', updatedCategory),
       this.currentMainCategory ? this.loadMainCategoryDetails(this.currentMainCategory.id) : of(true)

@@ -44,7 +44,6 @@ export class AccountDetailsComponent implements OnInit {
       description: this.form.value.description,
       balance: this.form.value.balance,
       type: this.form.value.type,
-      isEnabled: true,
       id: this.isEdit ? this.account.id : 0,
       created: new Date()
     };

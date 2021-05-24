@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {RegisterService} from './register.service';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {catchError, tap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of} from 'rxjs';
@@ -21,7 +20,6 @@ export class RegisterComponent implements OnInit {
   public showPasswordToggle = new BehaviorSubject<boolean>(false);
 
   constructor(
-    private readonly registerService: RegisterService,
     private readonly authService: AuthenticationService,
     private readonly router: Router,
     private readonly toast: ToastService,
@@ -33,7 +31,7 @@ export class RegisterComponent implements OnInit {
           Validators.compose(
             [
               Validators.required,
-              Validators.pattern('[A-Za-z0-9@.+-_ ]+') // TODO: add more chars
+              Validators.pattern('[A-Za-z0-9@.+-_ ]+')
             ]
           )
         ),
@@ -82,7 +80,7 @@ export class RegisterComponent implements OnInit {
       const psw2 = frm.get(field2)!.value;
       if (psw1 !== '' && psw1 !== psw2) {
         // tslint:disable-next-line:no-non-null-assertion
-        frm.get(field2)!.setErrors({ notMatch: 'passwords does not match' });
+        frm.get(field2)!.setErrors({ notMatch: 'Passwords do not match.' });
         return { notMatch: 'Passwords do not match.' };
       }
       return null;
@@ -96,7 +94,7 @@ export class RegisterComponent implements OnInit {
   onSubmit(): void {
     if (!this.form.valid) { return; }
     this.showBackendErrors.next(false);
-    this.registerService.sendRegistration(this.form.value.username, this.form.value.password1, this.form.value.email).pipe(
+    this.authService.sendRegistration(this.form.value.username, this.form.value.password1, this.form.value.email).pipe(
       tap(() => {
         this.form.get('password1')?.setValue('');
         this.form.get('password2')?.setValue('');

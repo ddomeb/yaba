@@ -6,12 +6,6 @@ export interface MainCategory {
   readonly id: number;
 }
 
-export interface SubCategoryDetails {
-  name: string;
-  readonly id: number;
-  readonly main_category: MainCategory;
-}
-
 export interface SubCategory {
   name: string;
   description?: string;

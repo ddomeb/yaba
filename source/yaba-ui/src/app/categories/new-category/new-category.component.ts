@@ -30,12 +30,7 @@ export class NewCategoryComponent {
             ]
           )
         ),
-        description: new FormControl('',
-          Validators.compose(
-            [
-              Validators.maxLength(100)
-            ]
-          )),
+        description: new FormControl('', Validators.maxLength(100)),
         isIncome: new FormControl('expense', Validators.required)
       }
     );

@@ -30,7 +30,6 @@ export class ExpenseCardGridComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('on destroy');
   }
 
 }

@@ -74,10 +74,10 @@
                   </i-bs>
                 </button>
             </div>
-            <small class="form-text text-danger" *ngIf="form.get('password2')!.errors && form.get('password1')!.valid">
-              {{form.get('password2')!.errors?.notMatch}}
-            </small>
           </div>
+          <small class="form-text text-danger" *ngIf="form.get('password2')!.errors && form.get('password1')!.valid">
+            {{form.get('password2')!.errors?.notMatch}}
+          </small>
         </div>
       </div>
     </form>

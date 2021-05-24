@@ -4,7 +4,7 @@ import {HttpParams} from '@angular/common/http';
 import {tap} from 'rxjs/operators';
 
 import {ApiService} from '../services/apiservice.service';
-import {PaginatedTransactionList, TransactionDetails, TransactionInfo} from '../common_models/transaction.interface';
+import {PaginatedTransactionList, TransactionInfo} from '../common_models/transaction.interface';
 import {MainCategory, MainCategoryDetails} from '../common_models/category.interface';
 import {AccountInfo} from '../common_models/account.interface';
 
@@ -71,14 +71,6 @@ export class TransactionService {
   private queryTransactionsWithPagination(params: HttpParams, page: number): Observable<PaginatedTransactionList>  {
     params = params.set('page', page.toString());
     return this.apiService.get<PaginatedTransactionList>(
-      TransactionService.TRANSACTIONS_ENDPOINT,
-      undefined,
-      params
-    );
-  }
-
-  private queryTransactionDetails(params: HttpParams): Observable<Array<TransactionDetails>> {
-    return this.apiService.get<Array<TransactionDetails>>(
       TransactionService.TRANSACTIONS_ENDPOINT,
       undefined,
       params

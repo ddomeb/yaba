@@ -1,15 +1,12 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {HttpParams} from '@angular/common/http';
-
+import {tap} from 'rxjs/operators';
 
 import {AccountInfo} from '../common_models/account.interface';
 import {ApiService} from '../services/apiservice.service';
-import {map, tap} from 'rxjs/operators';
 import {PaginatedTransactionList} from '../common_models/transaction.interface';
-import {AccountHistory, SeriesData} from '../common_models/account-history.interface';
 import {AccountsByType} from './accounts.interface';
-
 
 const EMPTY_ACCOUNTS = {
   accounts: [],
@@ -18,19 +15,14 @@ const EMPTY_ACCOUNTS = {
   others: []
 };
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class AccountsService {
   private static readonly ACCOUNTS_ENDPOINT = 'accounts/';
   private static readonly TRANSACTIONS_ENDPOINT = 'transactions/';
-  private static readonly DASHBOARD_ENDPOINT = 'dashboard/';
 
   private accounts: Array<AccountInfo> = [];
-  public accountsPublisher: BehaviorSubject<Array<AccountInfo>> =
-    new BehaviorSubject<Array<AccountInfo>>([]);
-
   public partitionedAccountsPublisher = new BehaviorSubject<AccountsByType>(JSON.parse(JSON.stringify(EMPTY_ACCOUNTS)));
 
   constructor(private readonly apiService: ApiService) {}
@@ -39,7 +31,6 @@ export class AccountsService {
     this.apiService.get<Array<AccountInfo>>(AccountsService.ACCOUNTS_ENDPOINT).subscribe(
       (response: Array<AccountInfo>) => {
         this.accounts = response;
-        this.accountsPublisher.next(this.accounts);
         const partitionedAccounts: AccountsByType = JSON.parse(JSON.stringify(EMPTY_ACCOUNTS));
         response.forEach(
           value => {
@@ -100,21 +91,4 @@ export class AccountsService {
     );
   }
 
-  public getAccountBalanceHistory(accountId: number, timedelta: string): Observable<AccountHistory> {
-    const params = new HttpParams().set('timedelta', timedelta);
-    return this.apiService.get<AccountHistory>(
-      AccountsService.DASHBOARD_ENDPOINT + accountId.toString() + '/',
-      undefined,
-      params
-    ).pipe(
-      map((response: AccountHistory) => {
-        // @ts-ignore
-        response.series = response.series.map((elem: SeriesData) => {
-          // @ts-ignore
-          return {name: new Date(elem.name), value: elem.value};
-        });
-        return response;
-      })
-    );
-  }
 }

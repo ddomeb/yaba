@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {DashboardInterface} from '../dashboard.interface';
 import {BehaviorSubject} from 'rxjs';
 import {DashboardService} from '../dashboard.service';
@@ -9,19 +9,12 @@ import {DashboardService} from '../dashboard.service';
   templateUrl: './expense-piechart.component.html',
   styleUrls: ['./expense-piechart.component.scss']
 })
-export class ExpensePiechartComponent implements OnInit {
+export class ExpensePiechartComponent {
   view: [number, number] = [1000, 400];
-
-  // nameFormatting = function(name: any) { return name + ' HUF'; };
-
-  // options
   gradient = true;
   showLegend = false;
   showLabels = true;
   label = 'Total (HUF)';
-  colorScheme = {
-    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
-  };
 
   public data: BehaviorSubject<DashboardInterface | null>;
   public showPrevMonthData: BehaviorSubject<boolean>;
@@ -32,9 +25,6 @@ export class ExpensePiechartComponent implements OnInit {
   }
 
   nameFormatting(name: string): any { return name + ' (HUF)'; }
-
-  ngOnInit(): void {
-  }
 
   onSelect($event: any): void {
     this.dashService.loadSubCategoryStats($event.extra.id);

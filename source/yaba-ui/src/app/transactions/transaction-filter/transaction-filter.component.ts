@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import {FilterParams} from '../filter-params.interface';
 import {MainCategory, MainCategoryDetails} from '../../common_models/category.interface';
-import {BehaviorSubject, concat} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {TransactionService} from '../transaction.service.';
 import {AccountInfo} from '../../common_models/account.interface';
 

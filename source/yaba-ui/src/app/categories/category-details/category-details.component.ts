@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MainCategory, MainCategoryDetails, SubCategory} from '../../common_models/category.interface';
-import {BehaviorSubject, of, concat, Subject, Observable} from 'rxjs';
+import {BehaviorSubject, of, concat, Subject} from 'rxjs';
 import {CategoriesService} from '../categories.service';
 import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {SimpleConfirmModalComponent} from '../../common_components/simple-confirm-modal/simple-confirm-modal.component';
@@ -82,12 +82,12 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     this.editedSubcategory = subCategory;
   }
 
-  onCancelEditSubCategory(subCategory: SubCategory): void {
+  onCancelEditSubCategory(): void {
     this.currentEditedSubcategory.next(null);
     this.subCategoryForm = null;
   }
 
-  onConfirmEditSubCategory(subCategory: SubCategory): void {
+  onConfirmEditSubCategory(): void {
     if (this.subCategoryForm === null || !this.subCategoryForm?.valid) {
       return;
     }
@@ -105,7 +105,6 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     );
   }
 
-
   addNewSubCategory(): void {
     const modalRef = this.modalService.open(NewCategoryComponent);
     modalRef.componentInstance.isSubcategory = true;
@@ -120,9 +119,9 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     if (!this.form.valid || this.form.pristine) {
       this.form.reset();
       // tslint:disable-next-line:no-non-null-assertion
-      this.form.get('name')!.setValue(this.categoryInfo!.name, {emitEvent: false});
+      this.form.controls.name.setValue(this.categoryInfo!.name, {emitEvent: false});
       // tslint:disable-next-line:no-non-null-assertion
-      this.form.get('description')!.setValue(this.categoryInfo!.description, {emitEvent: false});
+      this.form.controls.description.setValue(this.categoryInfo!.description, {emitEvent: false});
       return;
     }
     const updatedCategory: MainCategory = {
