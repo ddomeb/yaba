@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {DashboardInterface, GroupedStats, SeriesData} from './dashboard.interface';
 import {BehaviorSubject} from 'rxjs';
+
+import {DashboardInterface, SeriesData} from './dashboard.interface';
 import {DashboardService} from './dashboard.service';
 
 @Component({

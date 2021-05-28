@@ -9,7 +9,7 @@
         <label for="user" class="col-2 col-form-label">Username</label>
         <div class="col-4">
           <input formControlName="username" class="form-control" type="text"  id="user">
-          <small class="form-text text-muted" *ngIf="!form.controls.username?.errors">
+          <small class="form-text text-muted">
             Valid characters: A-Z, a-z, 0-9, + - _ @.
           </small>
           <small class="form-text text-danger" *ngIf="showBackendErrors | async">

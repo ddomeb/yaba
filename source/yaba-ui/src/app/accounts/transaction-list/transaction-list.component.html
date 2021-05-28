@@ -1,6 +1,6 @@
 <div class="modal-header">
   <h4 class="modal-title">Transactions for {{account.name}}</h4>
-  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('cross')">
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('nok')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
@@ -17,7 +17,6 @@
       </thead>
       <tbody>
       <tr *ngFor="let transaction of (currentPagePublisher | async)!.results; index as i">
-        <!--    <th scope="row">{{ i + 1 }}</th>-->
         <td>{{ transaction.created | date:'short' }}</td>
         <td>{{ transaction.amount | number }}</td>
         <td style="max-width: 155px; overflow-wrap: break-word;">{{ transaction.subcategory.name }}</td>

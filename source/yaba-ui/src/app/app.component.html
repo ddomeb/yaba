@@ -45,10 +45,10 @@
           </div>
         </ng-container>
       </div>
-    </header>
+    <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
+  </header>
   </div>
   <div class="container-fluid">
-    <app-toast-container aria-live="polite" aria-atomic="true"></app-toast-container>
     <router-outlet *ngIf="contentLoadable | async"></router-outlet>
   </div>
 </ng-container>

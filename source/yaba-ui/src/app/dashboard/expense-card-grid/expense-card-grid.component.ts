@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {SeriesData} from '../dashboard.interface';
 import {DashboardService} from '../dashboard.service';
@@ -8,7 +8,7 @@ import {DashboardService} from '../dashboard.service';
   templateUrl: './expense-card-grid.component.html',
   styleUrls: ['./expense-card-grid.component.scss']
 })
-export class ExpenseCardGridComponent implements OnInit, OnDestroy {
+export class ExpenseCardGridComponent implements OnInit {
   view: [number, number] = [1000, 400];
   cardColor = '#232837';
 
@@ -24,12 +24,4 @@ export class ExpenseCardGridComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
   }
-
-  onSelect($event: any): void {
-    // console.log($event);
-  }
-
-  ngOnDestroy(): void {
-  }
-
 }

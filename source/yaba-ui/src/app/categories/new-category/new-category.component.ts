@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
-import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {CategoriesService} from '../categories.service';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MainCategory, SubcategoryWithPk} from '../../common_models/category.interface';
 import {tap} from 'rxjs/operators';
+import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+
+import {CategoriesService} from '../categories.service';
+import {MainCategory, SubcategoryWithPk} from '../../common_models/category.interface';
 
 @Component({
   selector: 'app-new-category',

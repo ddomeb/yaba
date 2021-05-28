@@ -15,7 +15,6 @@ export interface DashboardInterface {
   };
   lastTransactions?: TransactionDetails[];
   expenseByMainCategory?: GroupedStats;
-  // expenseOfCurrentCategory?: SeriesData[];
 }
 
 export interface StatsResponse {

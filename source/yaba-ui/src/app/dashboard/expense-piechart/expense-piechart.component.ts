@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import {DashboardInterface} from '../dashboard.interface';
 import {BehaviorSubject} from 'rxjs';
-import {DashboardService} from '../dashboard.service';
 
+import {DashboardService} from '../dashboard.service';
+import {DashboardInterface} from '../dashboard.interface';
 
 @Component({
   selector: 'app-expense-piechart',

@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {tap} from 'rxjs/operators';
+import {BehaviorSubject} from 'rxjs';
 
 import {PaginatedTransactionList} from '../../common_models/transaction.interface';
 import {AccountsService} from '../accounts.service';
@@ -40,10 +40,6 @@ export class TransactionListComponent implements OnInit {
   public changePage(direction: number): void {
     this.currentPage += direction;
     this.getPageData();
-  }
-
-  public dismiss(): void {
-    this.activeModal.dismiss('closed');
   }
 
   private getPageData(): void {

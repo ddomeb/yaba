@@ -1,10 +1,11 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
-import {AuthenticationService} from '../services/authentication.service';
 import {tap} from 'rxjs/operators';
-import {ToastService} from '../common_components/toast-container/toast.service';
 import {BehaviorSubject} from 'rxjs';
+
+import {AuthenticationService} from '../services/authentication.service';
+import {ToastService} from '../common_components/toast-container/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ import {BehaviorSubject} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  form: FormGroup;
+  public form: FormGroup;
   public showAuthFail = new BehaviorSubject<boolean>(false);
   public showPasswordToggle = new BehaviorSubject<boolean>(false);
 
@@ -23,12 +24,10 @@ export class LoginComponent implements OnInit {
     private readonly router: Router,
     private readonly toast: ToastService
   ) {
-
     this.form = this.formBuilder.group({
       username: ['', Validators.required],
       password: ['', Validators.required]
     });
-
     this.form.valueChanges.subscribe(() => this.showAuthFail.next(false));
   }
 

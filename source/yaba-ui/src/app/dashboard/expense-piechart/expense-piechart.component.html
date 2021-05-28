@@ -1,4 +1,9 @@
-<ng-container *ngIf="(data | async) && (data | async)!.expenseByMainCategory">
+<ng-container *ngIf="!(data | async) || !((data | async)!.expenseByMainCategory) || !((data | async)!.expenseByMainCategory!.thisMonth.length > 0)">
+  <div class="text-center card-body">
+    <h3>You haven't added any categories yet.</h3>
+  </div>
+</ng-container>
+<ng-container *ngIf="(data | async) && (data | async)!.expenseByMainCategory && (data | async)!.expenseByMainCategory!.thisMonth.length > 0">
   <ngx-charts-advanced-pie-chart
     [view]="view"
     [results]="(data | async)!.expenseByMainCategory!.thisMonth"

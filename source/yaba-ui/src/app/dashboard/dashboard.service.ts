@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import {HttpParams} from '@angular/common/http';
+import {BehaviorSubject, concat, Observable} from 'rxjs';
+import {tap} from 'rxjs/operators';
+
 import {ApiService} from '../services/apiservice.service';
 import {DashboardInterface, GroupedStats, SeriesData, StatsResponse} from './dashboard.interface';
-import {tap} from 'rxjs/operators';
 import {TransactionDetails} from '../common_models/transaction.interface';
-import {BehaviorSubject, concat, Observable} from 'rxjs';
-import {HttpParams} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'

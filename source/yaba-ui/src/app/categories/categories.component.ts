@@ -1,9 +1,9 @@
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {CategoriesService} from './categories.service';
 import {BehaviorSubject, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
+import {CategoriesService} from './categories.service';
 import {MainCategory, MainCategoryDetails} from '../common_models/category.interface';
 import {NewCategoryComponent} from './new-category/new-category.component';
 import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';

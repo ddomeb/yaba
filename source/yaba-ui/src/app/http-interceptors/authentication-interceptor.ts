@@ -6,13 +6,15 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {SessionInfo, accessTokenIsExpired, refreshTokenTokenIsExpired} from '../common_models/sessioninfo.interface';
-import {catchError, switchMap, tap} from 'rxjs/operators';
-import {AuthenticationService} from '../services/authentication.service';
 import {Router} from '@angular/router';
-import {ToastService} from '../common_components/toast-container/toast.service';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {Observable} from 'rxjs';
+import {catchError, switchMap, tap} from 'rxjs/operators';
+
+import {AuthenticationService} from '../services/authentication.service';
+import {ToastService} from '../common_components/toast-container/toast.service';
+import {SessionInfo, accessTokenIsExpired, refreshTokenTokenIsExpired} from '../common_models/sessioninfo.interface';
+
 
 @Injectable()
 export class AuthenticationInterceptor implements HttpInterceptor {
@@ -34,7 +36,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     private readonly modalService: NgbModal
   ) {}
 
-
+  // TODO: refactor
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.isWhiteListed(req.url)) { return next.handle(req); }
     const sessionData: string | null = localStorage.getItem('session_info');

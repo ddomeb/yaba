@@ -1,10 +1,12 @@
+/* tslint:disable:no-non-null-assertion */
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {catchError, tap} from 'rxjs/operators';
 import {BehaviorSubject, Observable, of} from 'rxjs';
+import {Router} from '@angular/router';
+
 import {AuthenticationService} from '../services/authentication.service';
 import {AuthenticationResponse} from '../common_models/authentication.interface';
-import {Router} from '@angular/router';
 import {ToastService} from '../common_components/toast-container/toast.service';
 
 
@@ -72,21 +74,20 @@ export class RegisterComponent implements OnInit {
     // tslint:disable-next-line:only-arrow-functions
     return function(frm: AbstractControl): {[key: string]: any} | null {
       if (frm.get(field1) === null || frm.get(field2) === null){
-        return  {error: 'missing fields'};
+        return  {error: 'Missing fields'};
       }
-      // tslint:disable-next-line:no-non-null-assertion
+      if (frm.get(field2)!.pristine) {
+        return null;
+      }
       const psw1 = frm.get(field1)!.value;
-      // tslint:disable-next-line:no-non-null-assertion
       const psw2 = frm.get(field2)!.value;
       if (psw1 !== '' && psw1 !== psw2) {
-        // tslint:disable-next-line:no-non-null-assertion
         frm.get(field2)!.setErrors({ notMatch: 'Passwords do not match.' });
         return { notMatch: 'Passwords do not match.' };
       }
       return null;
     };
   }
-
 
   ngOnInit(): void {
   }

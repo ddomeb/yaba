@@ -1,11 +1,12 @@
+/* tslint:disable:no-non-null-assertion */
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from '../services/authentication.service';
 import {AbstractControl, FormControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, tap} from 'rxjs/operators';
-import {AuthenticationResponse} from '../common_models/authentication.interface';
-import {ToastService} from '../common_components/toast-container/toast.service';
 import {Router} from '@angular/router';
+
+import {AuthenticationService} from '../services/authentication.service';
+import {ToastService} from '../common_components/toast-container/toast.service';
 
 @Component({
   selector: 'app-password-change',
@@ -15,6 +16,7 @@ import {Router} from '@angular/router';
 export class PasswordChangeComponent implements OnInit {
   public form: FormGroup;
   public showBackendErrors = new BehaviorSubject<boolean>(false);
+  public showPasswordToggle = new BehaviorSubject<boolean>(false);
 
   constructor(
     private readonly authService: AuthenticationService,
@@ -63,14 +65,14 @@ export class PasswordChangeComponent implements OnInit {
       if (frm.get(field1) === null || frm.get(field2) === null){
         return  {error: 'missing fields'};
       }
-      // tslint:disable-next-line:no-non-null-assertion
+      if (frm.get(field2)!.pristine) {
+        return null;
+      }
       const psw1 = frm.get(field1)!.value;
-      // tslint:disable-next-line:no-non-null-assertion
       const psw2 = frm.get(field2)!.value;
       if (psw1 !== '' && psw1 !== psw2) {
-        // tslint:disable-next-line:no-non-null-assertion
-        frm.get(field2)!.setErrors({ notMatch: 'passwords does not match' });
-        return { notMatch: 'passwords does not match' };
+        frm.get(field2)!.setErrors({ notMatch: 'Passwords do not match' });
+        return { notMatch: 'Passwords do not match' };
       }
       return null;
     };

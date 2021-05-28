@@ -2,10 +2,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {BehaviorSubject, Observable, of} from 'rxjs';
 import {catchError, shareReplay, switchMap, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+
 import {SessionInfo, refreshTokenTokenIsExpired, accessTokenIsExpired} from '../common_models/sessioninfo.interface';
 import {AuthenticationResponse, UserData} from '../common_models/authentication.interface';
 import {ToastService} from '../common_components/toast-container/toast.service';
-import {Router} from '@angular/router';
 
 interface TokenInfo {
   exp: number;
@@ -25,7 +26,7 @@ const SESSION_INFO_KEY = 'session_info';
 const LOGIN_URL = 'authentication/login/';
 const LOGOUT_URL = 'authentication/logout/';
 const REFRESH_URL = 'authentication/token/refresh/';
-const REGISTER_URL = 'register/';
+const REGISTER_URL = 'registration/';
 const PASSWORD_CHANGE_URL = 'authentication/password/change/';
 
 @Injectable({
@@ -74,6 +75,7 @@ export class AuthenticationService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
+  // TODO: refactor
   public loadSessionStatus(): Observable<any> {
     const session: SessionInfo | null = AuthenticationService.getSessionInfo();
 
@@ -112,8 +114,6 @@ export class AuthenticationService {
       }
     }
   }
-
-
 
   public sendRegistration(username: string, password: string, email: string): Observable<any> {
     return this.client.post(
@@ -167,6 +167,7 @@ export class AuthenticationService {
     );
   }
 
+  // TODO: refactor
   public logout(): Observable<any> {
     const session: SessionInfo | null = AuthenticationService.getSessionInfo();
     if (session === null) {

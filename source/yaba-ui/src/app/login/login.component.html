@@ -31,7 +31,7 @@
           </div>
         </div>
       </fieldset>
-      <div class="form-buttons my-5 mx-5">
+      <div class="form-buttons mb-5 mx-5">
          <p *ngIf="showAuthFail | async" class="text-danger">Invalid username or password</p>
         <button class="w-100 btn btn-lg btn-primary" [disabled]="!form.valid" (click)="login()">Login</button>
       </div>

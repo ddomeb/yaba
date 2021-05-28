@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {TransactionService} from './transaction.service.';
-import {PaginatedTransactionList} from '../common_models/transaction.interface';
 import {BehaviorSubject, concat, of} from 'rxjs';
 import {switchMap, tap} from 'rxjs/operators';
-import {FilterParams} from './filter-params.interface';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+
+import {FilterParams} from './filter-params.interface';
 import {NewTransactionComponent} from './new-transaction/new-transaction.component';
 import {SimpleConfirmModalComponent} from '../common_components/simple-confirm-modal/simple-confirm-modal.component';
+import {TransactionService} from './transaction.service.';
+import {PaginatedTransactionList} from '../common_models/transaction.interface';
 
 @Component({
   selector: 'app-transactions',

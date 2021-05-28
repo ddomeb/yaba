@@ -1,12 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MainCategory, MainCategoryDetails, SubCategory} from '../../common_models/category.interface';
-import {BehaviorSubject, of, concat, Subject} from 'rxjs';
-import {CategoriesService} from '../categories.service';
-import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
-import {SimpleConfirmModalComponent} from '../../common_components/simple-confirm-modal/simple-confirm-modal.component';
-import {catchError, switchMap, tap} from 'rxjs/operators';
-import {NewCategoryComponent} from '../new-category/new-category.component';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {BehaviorSubject, of, concat, Subject} from 'rxjs';
+import {catchError, switchMap, tap} from 'rxjs/operators';
+
+import {MainCategory, MainCategoryDetails, SubCategory} from '../../common_models/category.interface';
+import {CategoriesService} from '../categories.service';
+import {SimpleConfirmModalComponent} from '../../common_components/simple-confirm-modal/simple-confirm-modal.component';
+import {NewCategoryComponent} from '../new-category/new-category.component';
 
 @Component({
   selector: 'app-category-details',
@@ -46,12 +47,10 @@ export class CategoryDetailsComponent implements OnInit, OnDestroy {
     this.categoryService.loadMainCategoryDetails(this.categoryId).pipe(
       tap((response: MainCategoryDetails) => {
         if (this.form.contains('name')){
-          // tslint:disable-next-line:no-non-null-assertion
-          this.form.get('name')!.setValue(response.name, {emitEvent: true});
+          this.form.controls.name.setValue(response.name, {emitEvent: true});
         }
         if (this.form.contains('description')){
-          // tslint:disable-next-line:no-non-null-assertion
-          this.form.get('description')!.setValue(response.description, {emitEvent: false});
+          this.form.controls.description.setValue(response.description, {emitEvent: false});
         }
         this.categoryInfo = {name: response.name, description: response.description};
       }),

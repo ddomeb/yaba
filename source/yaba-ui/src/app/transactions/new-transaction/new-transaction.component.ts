@@ -40,11 +40,12 @@ export class NewTransactionComponent implements OnInit {
       mainCategoryId: new FormControl('', Validators.required),
       subCategoryId: new FormControl('', Validators.required),
       note: new FormControl('', Validators.maxLength(150)),
-      amount: new FormControl('1000',
+      amount: new FormControl(1000,
         Validators.compose(
           [
             Validators.required,
-            Validators.min(1)
+            Validators.min(1),
+            Validators.pattern('\\d*')
           ]
         )
       )

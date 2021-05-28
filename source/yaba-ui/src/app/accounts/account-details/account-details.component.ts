@@ -11,7 +11,6 @@ import {AccountsService} from '../accounts.service';
   styleUrls: ['./account-details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-// tslint:disable-next-line:align
 export class AccountDetailsComponent implements OnInit {
   // @ts-ignore
   @Input() account: AccountInfo;
@@ -32,7 +31,12 @@ export class AccountDetailsComponent implements OnInit {
         ]
       )),
       description: new FormControl('', Validators.maxLength(250)),
-      balance: new FormControl('', Validators.required),
+      balance: new FormControl('', Validators.compose(
+        [
+          Validators.required,
+          Validators.pattern('-?\\d*')
+        ]
+      )),
       type: new FormControl('', Validators.required)
     });
   }
@@ -48,10 +52,10 @@ export class AccountDetailsComponent implements OnInit {
       created: new Date()
     };
     if (this.isEdit) {
-      this.accService.modifyAccount(acc).subscribe(resp => this.activeModal.close('ok')); // TODO: set errors
+      this.accService.modifyAccount(acc).subscribe(() => this.activeModal.close('ok'));
     }
     else {
-      this.accService.addAccount(acc).subscribe(resp => this.activeModal.close('ok'));
+      this.accService.addAccount(acc).subscribe(() => this.activeModal.close('ok'));
     }
   }
 

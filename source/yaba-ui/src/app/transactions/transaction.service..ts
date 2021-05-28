@@ -82,7 +82,7 @@ export class TransactionService {
       tap((response: Array<MainCategory>) => {
         this.mainCategories = response;
         this.mainCategoriesPublisher.next(this.mainCategories);
-        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome)); // REFACTOR: use partition fun
+        this.incomeCategoriesPublisher.next(response.filter(val => val.isIncome));
         this.expenseCategoriesPublisher.next(response.filter(val => !val.isIncome));
       })
     );
