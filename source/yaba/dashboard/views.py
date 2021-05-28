@@ -70,7 +70,7 @@ def get_monthly_expense_stats_by_subcategory(request: Request, category_pk: int)
 
 def get_transaction_summary_by_date_range(
     base_query: QuerySet, from_date: datetime.datetime, to_date: datetime.datetime
-) -> (int, int):
+) -> typing.Tuple[int, int]:
     date_filtered_query = base_query.filter(created__range=(from_date, to_date))
     sum_expense = date_filtered_query.filter(amount__lt=0).aggregate(Sum("amount"))
     sum_income = date_filtered_query.filter(amount__gt=0).aggregate(Sum("amount"))
