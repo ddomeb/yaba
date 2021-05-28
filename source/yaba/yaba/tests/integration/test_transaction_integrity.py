@@ -12,14 +12,16 @@ class TransactionIntegrityTests(APITestCase):
         self.user = User.objects.create_user("testuser", "testemail", "testpass")
         self.factory = RequestFactory()
         self.account = add_test_account(self.user, balance=0)
-        self.main_category = add_test_category(self.user)
-        self.subcategory = add_test_subcategory(self.user, main_category_pk=self.main_category.pk)
+        self.exp_main_category = add_test_category(self.user)
+        self.exp_subcategory = add_test_subcategory(self.user, main_category_pk=self.exp_main_category.pk)
+        self.inc_main_category = add_test_category(self.user, is_income=True)
+        self.inc_subcategory = add_test_subcategory(self.user, main_category_pk=self.inc_main_category.pk)
 
         self.tr_view = TransactionView()
         self.acc_view = AccountView()
 
     def test_posting_income_gets_added(self):
-        data = {"note": "new note", "amount": 1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
+        data = {"note": "new note", "amount": 1000, "subcategory": self.inc_subcategory.pk, "account": self.account.pk}
         request = self.factory.post("/transactions/", data, content_type="application/json")
         request.user = self.user
         self.tr_view.setup(request)
@@ -36,7 +38,7 @@ class TransactionIntegrityTests(APITestCase):
         self.assertEqual(response.data["balance"], 1000)
 
     def test_posting_expense_gets_subtracted(self):
-        data = {"note": "new note", "amount": -1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
+        data = {"note": "new note", "amount": -1000, "subcategory": self.exp_subcategory.pk, "account": self.account.pk}
         request = self.factory.post("/transactions/", data, content_type="application/json")
         request.user = self.user
         self.tr_view.setup(request)
@@ -53,7 +55,7 @@ class TransactionIntegrityTests(APITestCase):
         self.assertEqual(response.data["balance"], -1000)
 
     def test_deleting_income_gets_subtracted(self):
-        data = {"note": "new note", "amount": 1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
+        data = {"note": "new note", "amount": 1000, "subcategory": self.inc_subcategory.pk, "account": self.account.pk}
         request = self.factory.post("/transactions/", data, content_type="application/json")
         request.user = self.user
         self.tr_view.setup(request)
@@ -86,7 +88,7 @@ class TransactionIntegrityTests(APITestCase):
         self.assertEqual(response.data["balance"], 0)
 
     def test_deleting_expense_gets_added(self):
-        data = {"note": "new note", "amount": -1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
+        data = {"note": "new note", "amount": -1000, "subcategory": self.exp_subcategory.pk, "account": self.account.pk}
         request = self.factory.post("/transactions/", data, content_type="application/json")
         request.user = self.user
         self.tr_view.setup(request)

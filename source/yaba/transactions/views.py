@@ -58,7 +58,7 @@ class TransactionView(viewsets.ViewSet):
         if serializer.is_valid():
             if not TransactionView.transaction_is_valid(data, request.user):
                 return Response(
-                    data={'amount': [f'Invalid pk "{data["account"]}" - income can only be added to income category.']},
+                    data={"amount": [f'Invalid pk "{data["account"]}" - income can only be added to income category.']},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
@@ -134,6 +134,7 @@ class TransactionView(viewsets.ViewSet):
 
     @classmethod
     def transaction_is_valid(cls, data, user):
-        main_category = user.subcategories.get(pk=data['subcategory']).main_category
-        return (main_category.isIncome and int(data['amount']) > 0) \
-            or (not main_category.isIncome and int(data['amount']) < 0)
+        main_category = user.subcategories.get(pk=data["subcategory"]).main_category
+        return (main_category.isIncome and int(data["amount"]) > 0) or (
+            not main_category.isIncome and int(data["amount"]) < 0
+        )

@@ -75,7 +75,6 @@ export class AuthenticationService {
     return JSON.parse(atob(token.split('.')[1]));
   }
 
-  // TODO: refactor
   public loadSessionStatus(): Observable<any> {
     const session: SessionInfo | null = AuthenticationService.getSessionInfo();
 

@@ -36,61 +36,28 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     private readonly modalService: NgbModal
   ) {}
 
-  // TODO: refactor
+
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (this.isWhiteListed(req.url)) { return next.handle(req); }
     const sessionData: string | null = localStorage.getItem('session_info');
     if (sessionData === null) {
-      return next.handle(req).pipe(
-        tap(
-          () => {},
-          (err: any) => {
-            if (err instanceof HttpErrorResponse) {
-              if (err.status !== 401) {
-                return;
-              }
-              this.injector.get(AuthenticationService).clearSessionInfo();
-              this.modalService.dismissAll('nok');
-              this.toast.showDanger('Please login in first!');
-              this.router.navigate( ['login']);
-            }
-          }
-        ),
-      );
+      return this.handleNullSession(req, next);
     }
     const session: SessionInfo = JSON.parse(sessionData);
 
     if (!accessTokenIsExpired(session)) {
-      return next.handle(this.addAccessTokenToRequest(req, session));
-    }
-    else if (!refreshTokenTokenIsExpired(session)) {
-      const authenticationService: AuthenticationService = this.injector.get(AuthenticationService);
-      return authenticationService.refreshAccessToken().pipe(
-        switchMap((newSession: SessionInfo) => {
-          return next.handle(this.addAccessTokenToRequest(req, newSession));
-        }),
-        catchError(() => next.handle(req))
-      );
-    }
-    else {
-      AuthenticationService.clearSession();
-      return next.handle(req).pipe(
+      return next.handle(this.addAccessTokenToRequest(req, session)).pipe(
         tap(
           () => {},
-          (err: any) => {
-            if (err instanceof HttpErrorResponse) {
-              if (err.status === 401){
-                this.injector.get(AuthenticationService).clearSessionInfo();
-                this.modalService.dismissAll('nok');
-                this.toast.showDanger('Please login in first!');
-                this.router.navigate(['login']);
-                return;
-              }
-              return;
-            }
-          }
+          (err: any) => this.handle401Redirect(err)
         ),
       );
+    }
+    else if (!refreshTokenTokenIsExpired(session)) {
+      return this.handleRequestWithRefresh(req, next);
+    }
+    else {
+      return this.handleNoTokenCase(req, next);
     }
   }
 
@@ -99,5 +66,52 @@ export class AuthenticationInterceptor implements HttpInterceptor {
       headers: req.headers.set('Authorization',
         'Bearer ' + session.access_token.token)
     });
+  }
+
+  private handleNullSession(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(req).pipe(
+      tap(
+        () => {},
+        (err: any) => this.handle401Redirect(err)
+      ),
+    );
+  }
+
+  private handleRequestWithRefresh(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const authenticationService: AuthenticationService = this.injector.get(AuthenticationService);
+    return authenticationService.refreshAccessToken().pipe(
+      switchMap((newSession: SessionInfo) => {
+        return next.handle(this.addAccessTokenToRequest(req, newSession));
+      }),
+      catchError(() => next.handle(req).pipe(
+        tap(
+          () => {},
+          (err: any) => this.handle401Redirect(err)
+        ),
+      ))
+    );
+  }
+
+  private handleNoTokenCase(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    AuthenticationService.clearSession();
+    return next.handle(req).pipe(
+      tap(
+        () => {},
+        (err: any) => this.handle401Redirect(err)
+      ),
+    );
+  }
+
+  private handle401Redirect(err: any): void {
+    if (err instanceof HttpErrorResponse) {
+      if (err.status === 401){
+        this.injector.get(AuthenticationService).clearSessionInfo();
+        this.modalService.dismissAll('nok');
+        this.toast.showDanger('Please login in first!');
+        this.router.navigate(['login']);
+        return;
+      }
+      return;
+    }
   }
 }

@@ -5,7 +5,7 @@ urlpatterns = []
 
 urlpatterns += [
     # No need for admin site functionality in normal deployment.
-    # Left it here since it could be useful in debugging in the future.
+    # Left it here since it could be useful for debugging in the future.
     # path("admin/", admin.site.urls),
 ]
 

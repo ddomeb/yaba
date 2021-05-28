@@ -159,7 +159,7 @@ class TransactionViewUnitTests(APITestCase):
             self.assertCountEqual([tr["note"] for tr in response.data], tc["expected_notes"], tc["tc_name"])
 
     def test_create_valid_transaction(self):
-        data = {"note": "new note", "amount": 1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
+        data = {"note": "new note", "amount": -1000, "subcategory": self.subcategory.pk, "account": self.account.pk}
         request = self.factory.post("/transactions/", data, content_type="application/json")
         request.user = self.user
         self.view.setup(request)

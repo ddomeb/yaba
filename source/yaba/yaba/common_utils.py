@@ -15,16 +15,18 @@ subcategory_owned_by_requester = partial(_object_is_owned_by_requester, "subcate
 account_owned_by_requester = partial(_object_is_owned_by_requester, "accounts")
 
 
-def get_this_month_date_range(timezone_string: str = "Europe/Budapest")\
-        -> typing.Tuple[datetime.datetime, datetime.datetime]:
+def get_this_month_date_range(
+    timezone_string: str = "Europe/Budapest",
+) -> typing.Tuple[datetime.datetime, datetime.datetime]:
     tz = pytz.timezone(timezone_string)
     to_date = datetime.datetime.now(tz)
     from_date = to_date.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     return from_date, to_date
 
 
-def get_prev_month_date_range(timezone_string: str = "Europe/Budapest") \
-        -> typing.Tuple[datetime.datetime, datetime.datetime]:
+def get_prev_month_date_range(
+    timezone_string: str = "Europe/Budapest",
+) -> typing.Tuple[datetime.datetime, datetime.datetime]:
     tz = pytz.timezone(timezone_string)
     to_date = datetime.datetime.now(tz).replace(day=1, hour=0, minute=0, second=0, microsecond=0) - datetime.timedelta(
         microseconds=1
