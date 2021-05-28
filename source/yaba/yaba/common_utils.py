@@ -10,9 +10,7 @@ def _object_is_owned_by_requester(reverse_field_name: str, object_id: int, reque
 
 
 main_category_owned_by_requester = partial(_object_is_owned_by_requester, "main_categories")
-
 subcategory_owned_by_requester = partial(_object_is_owned_by_requester, "subcategories")
-
 account_owned_by_requester = partial(_object_is_owned_by_requester, "accounts")
 
 

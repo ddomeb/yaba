@@ -1,19 +1,6 @@
 from rest_framework import serializers
 
-from dashboard.models import SeriesData, AccountHistory, CashFlowStat
-
-
-class SeriesDataSerializer(serializers.Serializer):
-    value = serializers.IntegerField()
-    name = serializers.DateTimeField()
-
-    def create(self, validated_data):
-        return SeriesData(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.value = validated_data.get("value", instance.value)
-        instance.name = validated_data.get("name", instance.name)
-        return instance
+from dashboard.models import CashFlowStat
 
 
 class CashFlowStatSerializer(serializers.Serializer):

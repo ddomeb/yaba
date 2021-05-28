@@ -33,7 +33,6 @@ class AccountView(viewsets.ViewSet):
 
     @classmethod
     def update(cls, request: Request, pk=None) -> Response:
-        # TODO in case of modified balance should add balancing transaction
         queryset = request.user.accounts.all()
         account = get_object_or_404(queryset, pk=pk)
         data = JSONParser().parse(request)

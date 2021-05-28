@@ -38,7 +38,7 @@ class SubCategoryIntegrityTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["balance"], -900)
 
-        request = self.factory.get(f"/transactions/")
+        request = self.factory.get("/transactions/")
         request.user = self.user
         self.tr_view.setup(request)
 

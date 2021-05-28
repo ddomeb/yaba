@@ -43,4 +43,4 @@ class TransactionSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         self.fields["subcategory"] = SubCategorySerializer()
         self.fields["account"] = AccountSerializer()
-        return super(TransactionSerializer, self).to_representation(instance)
+        return super().to_representation(instance)

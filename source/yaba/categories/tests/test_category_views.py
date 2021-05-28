@@ -27,7 +27,7 @@ class MainCategoryViewUnitTests(APITestCase):
 
     def test_list_queried_categories(self):
         for cat in self.income_category, self.expense_category:
-            request = self.factory.get("/categories/?is_income={}".format("true" if cat.isIncome else "false"))
+            request = self.factory.get(f"/categories/?is_income={'true' if cat.isIncome else 'false'}")
             request.user = self.user
             self.view.setup(request)
 

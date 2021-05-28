@@ -39,7 +39,6 @@ class TransactionView(viewsets.ViewSet):
         serializer = TransactionDetailsSerializer(base_queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # TODO: check if income category amount is positive
     @classmethod
     def create(cls, request: Request) -> Response:
         data = JSONParser().parse(request)
@@ -57,12 +56,17 @@ class TransactionView(viewsets.ViewSet):
 
         serializer = TransactionSerializer(data=data)
         if serializer.is_valid():
+            if not TransactionView.transaction_is_valid(data, request.user):
+                return Response(
+                    data={'amount': [f'Invalid pk "{data["account"]}" - income can only be added to income category.']},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
             serializer.save(owner=request.user)
             TransactionView._process_transaction(serializer.validated_data, request.user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # TODO: don't really need this.
     @classmethod
     def retrieve(cls, request: Request, pk=None) -> Response:
         queryset = request.user.transactions.all()
@@ -127,3 +131,9 @@ class TransactionView(viewsets.ViewSet):
                 base_query = base_query.filter(amount__lt=0)
 
         return base_query
+
+    @classmethod
+    def transaction_is_valid(cls, data, user):
+        main_category = user.subcategories.get(pk=data['subcategory']).main_category
+        return (main_category.isIncome and int(data['amount']) > 0) \
+            or (not main_category.isIncome and int(data['amount']) < 0)

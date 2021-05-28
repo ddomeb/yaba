@@ -24,7 +24,7 @@ class SubCategorySerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         self.fields["main_category"] = MainCategorySerializer()
-        return super(SubCategorySerializer, self).to_representation(instance)
+        return super().to_representation(instance)
 
 
 class SubCategoryListSerializer(serializers.ModelSerializer):

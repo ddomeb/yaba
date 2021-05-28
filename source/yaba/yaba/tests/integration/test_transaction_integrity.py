@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 from accounts.views import AccountView
 from transactions.views import TransactionView
-from yaba.tests.utils import add_test_account, add_test_category, add_test_subcategory, add_test_transaction
+from yaba.tests.utils import add_test_account, add_test_category, add_test_subcategory
 
 
 class TransactionIntegrityTests(APITestCase):

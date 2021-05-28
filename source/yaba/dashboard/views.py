@@ -4,8 +4,7 @@ from collections import defaultdict
 
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.db.models import QuerySet, DateTimeField, Sum
-from django.db.models.functions import Trunc
+from django.db.models import QuerySet, Sum
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
@@ -69,27 +68,6 @@ def get_monthly_expense_stats_by_subcategory(request: Request, category_pk: int)
     )
 
 
-def get_start_date(end_date: datetime.datetime, timeline: str) -> typing.Optional[datetime.datetime]:
-    if timeline not in ["week", "month", "year"]:
-        return None
-    if timeline == "year":
-        return (end_date - datetime.timedelta(days=364)).replace(hour=0, minute=0, second=0, microsecond=0)
-    if timeline == "month":
-        return (end_date - datetime.timedelta(days=30)).replace(hour=0, minute=0, second=0, microsecond=0)
-    else:
-        return (end_date - datetime.timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0)
-
-
-def generate_transaction_history_base_queryset(
-    start_date: datetime.datetime, end_date: datetime.datetime, account_pk: int, request: Request
-) -> QuerySet:
-    return request.user.transactions.filter(account__id=account_pk).filter(created__range=(start_date, end_date))
-
-
-def get_timeline_param(request: Request) -> str:
-    return request.GET.get("timedelta", "month")
-
-
 def get_transaction_summary_by_date_range(
     base_query: QuerySet, from_date: datetime.datetime, to_date: datetime.datetime
 ) -> (int, int):
@@ -107,6 +85,7 @@ def get_expenses_by_category(
 ) -> typing.List[typing.Dict]:
     sum_dict = defaultdict(lambda: 0)
     for category in user.main_categories.filter(isIncome=False):
+        # the dictionary keys are (name, id) pairs since we need the id too
         sum_dict[(category.name, category.id)] = 0
 
     transactions = (
